@@ -1,8 +1,12 @@
 {
   "name": "oicy-command-creator",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "index.ts",
-  "repository": "https://github.com/cookpad/oicy-command-creator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cookpad/oicy-command-creator.git"
+  },
+  "private": false,
   "author": "Cookpad. ( Masayuki Ioki <masayuki-ioki@cookpad.com> )",
   "license": "MIT",
   "devDependencies": {

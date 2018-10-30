@@ -1,0 +1,19 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "declaration" : true,
+    "lib": [
+      "es7"
+    ],
+    "types": [
+      "node",
+      "mocha"
+    ],
+    "strictNullChecks": true
+  }
+}

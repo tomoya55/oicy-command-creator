@@ -13,6 +13,7 @@ class Quantity {
   postUnit: boolean;
   amountPerUnit: number;
   textUnit: string;
+  rawData: any;
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -20,6 +21,7 @@ class Quantity {
   static convert(obj): Quantity {
     const self = new Quantity();
     Object.keys(obj).forEach(k => self[k] = obj[k]);
+    self.rawData = obj;
     return self;
   }
 }
@@ -39,7 +41,7 @@ class MrrEdge {
   hrrStepNo: string;
   hrrStepTextRange: number[];
   mrr: Mrr;
-  rowData: any;
+  rawData: any;
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -62,7 +64,7 @@ class MrrEdge {
       }
     });
     self.mrr = mrr;
-    self.rowData = obj;
+    self.rawData = obj;
     return self;
   }
 }
@@ -78,7 +80,9 @@ class MrrNode {
   ingredientPosition: number;
   ingredientGroupMark: string;
   mrr: Mrr;
-  rowData: any;
+  rawData: any;
+
+  get name() { return this.xCookpadName; }
 
   ingredientGroup() {
     if(!this.ingredientGroupMark) { return [this]; }
@@ -93,14 +97,15 @@ class MrrNode {
     Object.keys(obj).forEach(k => {
       if (k == 'quantity') {
         self[k] = Quantity.convert(obj[k]);
-      } else if (k == 'name') {
+      } else if (k == 'name' || k == 'xCookpadName') {
         self.xCookpadName = obj[k];
       } else {
         self[k] = obj[k];
       }
     });
+    self.kind = self.kind || "intermediate"
     self.mrr = mrr;
-    self.rowData = obj;
+    self.rawData = obj;
     return self;
   }
 }
@@ -113,11 +118,14 @@ class Mrr {
   nodes: MrrNode[];
   edges: MrrEdge[];
   subGraphs: any;
-  rowData: any;
+  rawData: any;
 
   _ingredients: MrrNode[];
   _terminal: MrrNode;
   _edgeById: any;
+
+  get recipeUrl() { return this.xCookpadRecipeUrl; }
+  get recipeId() { return this.xCookpadRecipeId; }
 
   get terminal() {
     if(this._terminal) { return this._terminal; }
@@ -149,15 +157,15 @@ class Mrr {
    */
   static convert(obj): Mrr {
     const self = new Mrr();
-    self.xCookpadRecipeUrl = toS(obj.recipeUrl);
-    self.xCookpadRecipeId = toS(obj.recipeId);
+    self.xCookpadRecipeUrl = toS(obj.recipeUrl || obj.xCookpadRecipeUrl);
+    self.xCookpadRecipeId = toS(obj.recipeId || obj.xCookpadRecipeId);
     self.formatVersion = toS(obj.formatVersion);
     self.lcid = toS(obj.lcid);
     self.authorName = toS(obj.authorName);
     self.nodes = obj.nodes.map(n => MrrNode.convert(n, self));
     self.edges = obj.edges.map(n => MrrEdge.convert(n, self));
     self.subGraphs = obj.subGraphs;
-    self.rowData = obj;
+    self.rawData = obj;
     return self;
   }
 }

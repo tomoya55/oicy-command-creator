@@ -52,7 +52,7 @@ class Hrr {
 
     self.steps = obj.steps.map((v, index) => {
       const step = new HrrStep();
-      step.stepNo = index;
+      step.stepNo = index + 1;
       step.text = v.text;
       return step;
     });

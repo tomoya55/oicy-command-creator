@@ -23,26 +23,26 @@ class OicyRequest {
   readonly mrr: Mrr;
   readonly targetSubMrrKeys: TargetSubMrrKeys;
   /**
-   * The servingsFor is changed by the user.
+   * The ServingsForRate is changed by the user. Default value is 1
    */
-  readonly changedServingsFor: number;
+  readonly changedServingsForRate: number;
   readonly hrr: Hrr | null;
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
-  constructor(mrr: Mrr, params: any, targetSubMrrKeys: TargetSubMrrKeys, changedServingsFor: number, hrr: Hrr | null) {
+  constructor(mrr: Mrr, params: any, targetSubMrrKeys: TargetSubMrrKeys, changedServingsForRate: number, hrr: Hrr | null) {
     this.targetSubMrrKeys = targetSubMrrKeys;
     this.mrr = mrr;
     this.params = params;
-    this.changedServingsFor = changedServingsFor;
+    this.changedServingsForRate = changedServingsForRate;
     this.hrr = hrr;
   }
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
-  static create(mrr: Mrr, params: any, targetSubMrrKeysObj: any, changedServingsFor: number, hrr: Hrr | null) : OicyRequest {
+  static create(mrr: Mrr, params: any, targetSubMrrKeysObj: any, changedServingsForRate: number, hrr: Hrr | null) : OicyRequest {
     let nodeIds = [];
     let edgeIds = [];
     if (targetSubMrrKeysObj) {
@@ -50,7 +50,7 @@ class OicyRequest {
       edgeIds = targetSubMrrKeysObj.edgeIds;
     }
     const targetSubMrrKeys = new TargetSubMrrKeys(nodeIds, edgeIds);
-    return new this(mrr, params, targetSubMrrKeys, changedServingsFor, hrr);
+    return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr);
   }
 }
 export {OicyRequest, TargetSubMrrKeys};

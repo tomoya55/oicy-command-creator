@@ -38,8 +38,8 @@ const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
     }
     const params = event.params;
     const targetSubMrrKeys = stringToObject(event.targetSubMrrKeys || {});
-    const changedServingsFor = Number(event.changedServingsFor) || 0;
-    const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsFor, hrr);
+    const changedServingsForRate = Number(event.changedServingsForRate) || 1;
+    const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr);
     const callback = event.callback;
 
     if (callback == 'triggers') {

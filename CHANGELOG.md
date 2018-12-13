@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.0.15] - 2018-12-13
+
+### Added
+
+- OiCyCommandCreator can now have access to the user's device information.
 - CircleCI support
 
 ## [1.0.14] - 2018-12-12

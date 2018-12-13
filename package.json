@@ -1,6 +1,6 @@
 {
   "name": "oicy-command-creator",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "index.ts",
   "repository": {
     "type": "git",

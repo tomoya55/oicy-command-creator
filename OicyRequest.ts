@@ -1,14 +1,14 @@
 import { Mrr } from "./Mrr"
 import { Hrr } from "./Hrr"
 
-class Device {
+class UserDevice {
   readonly deviceId: string
-  readonly typeNumber: string
-  readonly modelName: string
+  readonly deviceTypeNumber: string
+  readonly deviceModelName: string
   readonly nickName: string
 
-  static convert(obj): Device {
-    const self = new Device()
+  static convert(obj): UserDevice {
+    const self = new UserDevice()
     Object.keys(obj).forEach(k => (self[k] = obj[k]))
     return self
   }
@@ -40,7 +40,7 @@ class OicyRequest {
    */
   readonly changedServingsForRate: number
   readonly hrr: Hrr | null
-  readonly device: Device | null
+  readonly device: UserDevice | null
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -51,7 +51,7 @@ class OicyRequest {
     targetSubMrrKeys: TargetSubMrrKeys,
     changedServingsForRate: number,
     hrr: Hrr | null,
-    device: Device | null
+    device: UserDevice | null
   ) {
     this.targetSubMrrKeys = targetSubMrrKeys
     this.mrr = mrr
@@ -70,7 +70,7 @@ class OicyRequest {
     targetSubMrrKeysObj: any,
     changedServingsForRate: number,
     hrr: Hrr | null,
-    device: Device | null
+    device: UserDevice | null
   ): OicyRequest {
     let nodeIds = []
     let edgeIds = []
@@ -82,4 +82,4 @@ class OicyRequest {
     return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   }
 }
-export { OicyRequest, TargetSubMrrKeys, Device }
+export { OicyRequest, TargetSubMrrKeys, UserDevice }

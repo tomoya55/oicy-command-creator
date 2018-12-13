@@ -1,6 +1,6 @@
 import { Hrr } from "./Hrr"
 import { Mrr } from "./Mrr"
-import { OicyRequest, Device } from "./OicyRequest"
+import { OicyRequest, UserDevice } from "./OicyRequest"
 import { OicyCommand, OicyResponse, OicyTriggerCreator } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
 
@@ -45,9 +45,9 @@ const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
   const params = event.params
   const targetSubMrrKeys = stringToObject(event.targetSubMrrKeys || {})
   const changedServingsForRate = Number(event.changedServingsForRate) || 1
-  let device: Device | null = null
+  let device: UserDevice | null = null
   if (event.device) {
-    device = Device.convert(stringToObject(event.device))
+    device = UserDevice.convert(stringToObject(event.device))
   }
   const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   const callback = event.callback

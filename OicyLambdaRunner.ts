@@ -45,7 +45,10 @@ const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
   const params = event.params
   const targetSubMrrKeys = stringToObject(event.targetSubMrrKeys || {})
   const changedServingsForRate = Number(event.changedServingsForRate) || 1
-  const device = Device.convert(event.device || {})
+  let device: Device | null = null
+  if (event.device) {
+    device = Device.convert(stringToObject(event.device))
+  }
   const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   const callback = event.callback
 

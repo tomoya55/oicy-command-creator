@@ -46,7 +46,6 @@ describe("OicyLambdaRunner", () => {
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
     assert.deepEqual(ret.view, {})
-    console.log(ret.data)
     assert.equal(ret.data, "t=OCY-001&m=OiCyDevice")
   })
 })

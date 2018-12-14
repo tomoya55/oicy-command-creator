@@ -1,6 +1,19 @@
 import { Mrr } from "./Mrr"
 import { Hrr } from "./Hrr"
 
+class UserDevice {
+  readonly deviceId: string
+  readonly deviceTypeNumber: string
+  readonly deviceModelName: string
+  readonly nickname: string
+
+  static convert(obj): UserDevice {
+    const self = new UserDevice()
+    Object.keys(obj).forEach(k => (self[k] = obj[k]))
+    return self
+  }
+}
+
 /**
  * Target nodes & edges for this DeviceAction
  */
@@ -27,6 +40,7 @@ class OicyRequest {
    */
   readonly changedServingsForRate: number
   readonly hrr: Hrr | null
+  readonly device: UserDevice | null
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -36,13 +50,15 @@ class OicyRequest {
     params: any,
     targetSubMrrKeys: TargetSubMrrKeys,
     changedServingsForRate: number,
-    hrr: Hrr | null
+    hrr: Hrr | null,
+    device: UserDevice | null
   ) {
     this.targetSubMrrKeys = targetSubMrrKeys
     this.mrr = mrr
     this.params = params
     this.changedServingsForRate = changedServingsForRate
     this.hrr = hrr
+    this.device = device
   }
 
   /**
@@ -53,7 +69,8 @@ class OicyRequest {
     params: any,
     targetSubMrrKeysObj: any,
     changedServingsForRate: number,
-    hrr: Hrr | null
+    hrr: Hrr | null,
+    device: UserDevice | null
   ): OicyRequest {
     let nodeIds = []
     let edgeIds = []
@@ -62,7 +79,7 @@ class OicyRequest {
       edgeIds = targetSubMrrKeysObj.edgeIds
     }
     const targetSubMrrKeys = new TargetSubMrrKeys(nodeIds, edgeIds)
-    return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr)
+    return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   }
 }
-export { OicyRequest, TargetSubMrrKeys }
+export { OicyRequest, TargetSubMrrKeys, UserDevice }

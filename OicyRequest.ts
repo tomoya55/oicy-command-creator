@@ -5,7 +5,7 @@ class UserDevice {
   readonly deviceId: string
   readonly deviceTypeNumber: string
   readonly deviceModelName: string
-  readonly nickName: string
+  readonly nickname: string
 
   static convert(obj): UserDevice {
     const self = new UserDevice()

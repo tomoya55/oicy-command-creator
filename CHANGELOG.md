@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [1.0.16] - 2019-11-27
+
+### Changed
+
+- Fix the import statement of power-assert
+
 ## [1.0.15] - 2018-12-13
 
 ### Added

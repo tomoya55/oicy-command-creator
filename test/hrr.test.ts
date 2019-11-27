@@ -1,5 +1,5 @@
 import { describe, it } from "mocha"
-import assert from "power-assert"
+import assert = require("assert")
 
 import { Hrr } from "../Hrr"
 import json3663183 from "../test_data/hrrs/3663183"

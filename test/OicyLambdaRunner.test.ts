@@ -1,5 +1,5 @@
 import { describe, it } from "mocha"
-import assert from "power-assert"
+import assert = require("assert")
 
 import { OicyLambdaRunner } from "../OicyLambdaRunner"
 import { OicyCommandCreator } from "../OicyCommandCreator"

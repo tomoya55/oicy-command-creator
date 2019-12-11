@@ -115,6 +115,17 @@ class MrrNode {
     return self
   }
 }
+class IngredientGroup {
+  ingredientGroupMark: String
+  nodeIds: String[]
+
+  static convert(obj): IngredientGroup {
+    const self = new IngredientGroup()
+    self.ingredientGroupMark = toS(obj.ingredientGroupMark)
+    self.nodeIds = obj.nodeIds.map(i => toS(i))
+    return self
+  }
+}
 class Mrr {
   xCookpadRecipeUrl: string
   xCookpadRecipeId: string
@@ -123,6 +134,7 @@ class Mrr {
   authorName: string
   nodes: MrrNode[]
   edges: MrrEdge[]
+  ingredientGroups: IngredientGroup[]
   subGraphs: any
   rawData: any
 
@@ -181,6 +193,7 @@ class Mrr {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   static convert(obj): Mrr {
+    console.log(obj)
     const self = new Mrr()
     self.xCookpadRecipeUrl = toS(obj.recipeUrl || obj.xCookpadRecipeUrl)
     self.xCookpadRecipeId = toS(obj.recipeId || obj.xCookpadRecipeId)
@@ -189,6 +202,7 @@ class Mrr {
     self.authorName = toS(obj.authorName)
     self.nodes = obj.nodes.map(n => MrrNode.convert(n, self))
     self.edges = obj.edges.map(n => MrrEdge.convert(n, self))
+    self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g))
     self.subGraphs = obj.subGraphs
     self.rawData = obj
     return self

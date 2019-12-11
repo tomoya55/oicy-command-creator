@@ -11,4 +11,10 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
     assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
   })
+
+  it("having servingsFor", () => {
+    assert.deepEqual(mrr.servingsFor.unitIds, ["15"])
+    assert.deepEqual(mrr.servingsFor.amounts, [2.0])
+    assert.equal(mrr.servingsFor.subUnitIds, null)
+  })
 })

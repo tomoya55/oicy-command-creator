@@ -8,13 +8,11 @@ const toS = s => {
   return ""
 }
 class Quantity {
-  unitId: string
+  unitIds: string[]
+  subUnitIds: string[]
   amounts: number[]
-  textAmount: string
-  coefficient: string
-  postUnit: boolean
-  amountPerUnit: number
-  textUnit: string
+  amountExpressions: string[]
+  coefficients: string[]
   rawData: any
 
   /**
@@ -202,7 +200,9 @@ class Mrr {
     self.authorName = toS(obj.authorName)
     self.nodes = obj.nodes.map(n => MrrNode.convert(n, self))
     self.edges = obj.edges.map(n => MrrEdge.convert(n, self))
-    self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g))
+    if (obj.ingredientGroups) {
+      self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g))
+    }
     self.subGraphs = obj.subGraphs
     self.rawData = obj
     return self

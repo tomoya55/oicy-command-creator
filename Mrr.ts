@@ -74,23 +74,13 @@ class MrrNode {
   xCookpadName: string
   quantity: Quantity
   state: string
-  ingredientId: string
   hrrStepNo: string
   nutrition: string
-  ingredientPosition: number
-  ingredientGroupMark: string
   mrr: Mrr
   rawData: any
 
   get name() {
     return this.xCookpadName
-  }
-
-  ingredientGroup() {
-    if (!this.ingredientGroupMark) {
-      return [this]
-    }
-    return this.mrr.ingredients.filter(i => i.ingredientGroupMark == this.ingredientGroupMark)
   }
 
   /**
@@ -113,14 +103,52 @@ class MrrNode {
     return self
   }
 }
+class IngredientNode extends MrrNode {
+  foodCompositionId: string
+  foodCategoryId: string
+  hrrIngredientPosition: number
+  ingredientPosition: number
+  ingredientGroupMark: string
+  alternativeFoodCompositionIds: string[]
+  alternativeFoodCategoryIds: string[]
+  mrr: Mrr
+  rawData: any
+
+  /**
+   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
+   */
+  static convert(obj, mrr: Mrr): IngredientNode {
+    const self = new IngredientNode()
+    Object.keys(obj).forEach(k => {
+      if (k == "quantity") {
+        self[k] = Quantity.convert(obj[k])
+      } else if (k == "name" || k == "xCookpadName") {
+        self.xCookpadName = obj[k]
+      } else {
+        self[k] = obj[k]
+      }
+    })
+    self.kind = "ingredient"
+    self.mrr = mrr
+    self.rawData = obj
+    return self
+  }
+}
 class IngredientGroup {
   ingredientGroupMark: String
   nodeIds: String[]
+  mrr: Mrr
+  rawData: any
 
-  static convert(obj): IngredientGroup {
+  /**
+   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
+   */
+  static convert(obj, mrr: Mrr): IngredientGroup {
     const self = new IngredientGroup()
     self.ingredientGroupMark = toS(obj.ingredientGroupMark)
     self.nodeIds = obj.nodeIds.map(i => toS(i))
+    self.mrr = mrr
+    self.rawData = obj
     return self
   }
 }
@@ -136,7 +164,7 @@ class Mrr {
   subGraphs: any
   rawData: any
 
-  _ingredients: MrrNode[]
+  _ingredients: IngredientNode[]
   _terminal: MrrNode
   _edgeById: any
 
@@ -158,11 +186,11 @@ class Mrr {
     return this.terminal.quantity
   }
 
-  get ingredients() {
+  get ingredients(): IngredientNode[] {
     if (this._ingredients) {
       return this._ingredients
     }
-    this._ingredients = this.nodes.filter(n => n.kind == "ingredient")
+    this._ingredients = (this.nodes.filter(n => n.kind == "ingredient") as IngredientNode[])
     return this._ingredients
   }
 
@@ -198,10 +226,10 @@ class Mrr {
     self.formatVersion = toS(obj.formatVersion)
     self.lcid = toS(obj.lcid)
     self.authorName = toS(obj.authorName)
-    self.nodes = obj.nodes.map(n => MrrNode.convert(n, self))
+    self.nodes = obj.nodes.map(n => (n.kind == 'ingredient') ? IngredientNode.convert(n, self) : MrrNode.convert(n, self))
     self.edges = obj.edges.map(n => MrrEdge.convert(n, self))
     if (obj.ingredientGroups) {
-      self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g))
+      self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g, self))
     }
     self.subGraphs = obj.subGraphs
     self.rawData = obj

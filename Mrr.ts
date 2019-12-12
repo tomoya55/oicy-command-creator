@@ -219,7 +219,6 @@ class Mrr {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   static convert(obj): Mrr {
-    console.log(obj)
     const self = new Mrr()
     self.xCookpadRecipeUrl = toS(obj.recipeUrl || obj.xCookpadRecipeUrl)
     self.xCookpadRecipeId = toS(obj.recipeId || obj.xCookpadRecipeId)

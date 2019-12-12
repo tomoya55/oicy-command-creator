@@ -23,6 +23,8 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.ingredients[0].id, "2")
     assert.equal(mrr.ingredients[0].hrrStepNo, 0)
     assert.equal(mrr.ingredients[0].foodCompositionId, "11119")
+    assert.deepEqual(mrr.ingredients[0].quantity.unitIds, ["9"])
+    assert.deepEqual(mrr.ingredients[0].quantity.amounts, [100.0])
     assert.equal(mrr.ingredients[9].id, "11")
     assert.equal(mrr.ingredients[9].foodCompositionId, "16023")
     assert.equal(mrr.ingredients[9].ingredientGroupMark, "☆")

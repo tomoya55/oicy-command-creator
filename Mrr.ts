@@ -38,7 +38,7 @@ class MrrEdge {
   toolIds: string[]
   settings: Setting[]
   order: string
-  hrrStepNo: string
+  hrrStepNo: number
   hrrStepTextRange: number[]
   mrr: Mrr
   rawData: any
@@ -74,7 +74,7 @@ class MrrNode {
   xCookpadName: string
   quantity: Quantity
   state: string
-  hrrStepNo: string
+  hrrStepNo: number
   nutrition: string
   mrr: Mrr
   rawData: any

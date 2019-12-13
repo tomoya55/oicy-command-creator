@@ -66,6 +66,7 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.terminal.id, "1")
     assert.equal(mrr.terminal.name, "《ストウブで作る》肉じゃが☆")
     assert.deepEqual(mrr.terminal.quantity.unitIds, ["15"])
+    assert.equal(mrr.terminal.hrrStepNo, null)
   })
 
   it("having ingredientGroups", () => {

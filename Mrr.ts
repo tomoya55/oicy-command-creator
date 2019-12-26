@@ -185,6 +185,8 @@ class Mrr {
   edges: MrrEdge[]
   ingredientGroups: IngredientGroup[]
   subGraphs: any
+  createdAt: Date
+  hrrUpdatedAt: Date
   rawData: any
 
   _ingredients: IngredientNode[]
@@ -254,6 +256,8 @@ class Mrr {
       self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g, self))
     }
     self.subGraphs = obj.subGraphs
+    self.createdAt = new Date(obj.createdAt)
+    self.hrrUpdatedAt = new Date(obj.hrrUpdatedAt)
     self.rawData = obj
     return self
   }

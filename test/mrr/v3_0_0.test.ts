@@ -99,4 +99,8 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.ingredients[9].foodCompositionId, "16023")
     assert.equal(mrr.ingredients[9].ingredientGroupMark, "☆")
   })
+
+  it("having hrrUpdatedAt", () => {
+    assert.deepEqual(mrr.hrrUpdatedAt.getFullYear(), Number(json4351780['hrrUpdatedAt'].split('-')[0]))
+  })
 })

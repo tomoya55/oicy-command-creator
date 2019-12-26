@@ -7,12 +7,28 @@ const toS = s => {
   }
   return ""
 }
-class Quantity {
-  unitIds: string[]
+
+class QuantityElement {
+  unitId: string
   subUnitIds: string[]
-  amounts: number[]
-  amountExpressions: string[]
-  coefficients: string[]
+  amount: number
+  amountExpression: string
+  coefficient: string
+  rawData: any
+
+  /**
+   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
+   */
+  static convert(obj): QuantityElement {
+    const self = new QuantityElement()
+    Object.keys(obj).forEach(k => (self[k] = obj[k]))
+    self.rawData = obj
+    return self
+  }
+}
+
+class Quantity {
+  elements: QuantityElement[]
   rawData: any
 
   /**
@@ -20,7 +36,14 @@ class Quantity {
    */
   static convert(obj): Quantity {
     const self = new Quantity()
-    Object.keys(obj).forEach(k => (self[k] = obj[k]))
+    Object.keys(obj).forEach(k => {
+      if (k == "elements") {
+        self[k] = obj[k].map(v => QuantityElement.convert(v))
+      } else {
+        self[k] = obj[k]
+      }
+      return self
+    })
     self.rawData = obj
     return self
   }
@@ -162,6 +185,8 @@ class Mrr {
   edges: MrrEdge[]
   ingredientGroups: IngredientGroup[]
   subGraphs: any
+  createdAt: Date
+  hrrUpdatedAt: Date
   rawData: any
 
   _ingredients: IngredientNode[]
@@ -231,6 +256,8 @@ class Mrr {
       self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g, self))
     }
     self.subGraphs = obj.subGraphs
+    self.createdAt = new Date(obj.createdAt)
+    self.hrrUpdatedAt = new Date(obj.hrrUpdatedAt)
     self.rawData = obj
     return self
   }

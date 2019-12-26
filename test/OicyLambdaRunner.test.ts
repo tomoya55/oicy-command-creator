@@ -7,7 +7,7 @@ import { OicyRequest } from "../OicyRequest"
 import { OicyTrigger, OicyCommand, OicyTriggerCreator } from "../OicyResponse"
 
 class TestCommandCreator implements OicyCommandCreator {
-  triggers(request: OicyRequest, triggerCreator: OicyTriggerCreator): OicyTrigger[] {
+  triggers(_request: OicyRequest, _triggerCreator: OicyTriggerCreator): OicyTrigger[] {
     return []
   }
 

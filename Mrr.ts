@@ -11,6 +11,7 @@ class QuantityElement {
 }
 
 class Quantity {
+  @Type(() => QuantityElement)
   elements: QuantityElement[]
   rawData: any
 }
@@ -25,6 +26,7 @@ class MrrEdge {
   kind: string
   actionId: string
   toolIds: string[]
+  @Type(() => Setting)
   settings: Setting[]
   order: string
   hrrStepNo: number
@@ -82,7 +84,9 @@ class Mrr {
 
   @Type(() => MrrNode)
   nodes: MrrNode[]
+  @Type(() => MrrEdge)
   edges: MrrEdge[]
+  @Type(() => IngredientGroup)
   ingredientGroups: IngredientGroup[]
   subGraphs: any
 

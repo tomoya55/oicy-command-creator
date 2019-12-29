@@ -47,6 +47,8 @@ describe("Mrr V3 2048398", () => {
     const s = e.settings[0]
     assert.equal(s.toolId, "microwave")
     assert.deepEqual(s.data, { type: "manual" })
+
+    assert.equal(s.constructor.name, "Setting")
   })
 
   it("e2 has settings", () => {
@@ -72,7 +74,10 @@ describe("Mrr V3 4351780", () => {
   const mrr = Mrr.convert(json4351780)
   it("has correct types", () => {
     assert.equal(mrr.constructor.name, "Mrr")
+    assert.equal(mrr.terminal.constructor.name, "MrrNode")
     assert.equal(mrr.terminal.quantity.constructor.name, "Quantity")
+    assert.equal(mrr.terminal.quantity.elements[0].constructor.name, "QuantityElement")
+    assert.equal(mrr.ingredientGroups[0].constructor.name, "IngredientGroup")
   })
   it("having terminal", () => {
     assert.equal(mrr.terminal.id, "1")

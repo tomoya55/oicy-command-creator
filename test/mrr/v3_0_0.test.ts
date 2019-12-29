@@ -44,22 +44,31 @@ describe("Mrr V3 2048398", () => {
     }
     assert.equal(e.id, "e1")
 
-    const s = e.settings[0]
-    assert.equal(s.toolId, "microwave")
-    assert.deepEqual(s.data, { type: "manual" })
+    if (e.settings) {
+      const s = e.settings[0]
+      assert.equal(s.toolId, "microwave")
+      assert.deepEqual(s.data, { type: "manual" })
 
-    assert.equal(s.constructor.name, "Setting")
+      assert.equal(s.constructor.name, "Setting")
+    } else {
+      assert.fail("No settings")
+    }
   })
 
   it("e2 has settings", () => {
-    const s = mrr.edge("e2").settings[0]
-    assert.equal(s.toolId, "microwaveOven")
-    assert.deepEqual(s.data, {
-      time: [1140],
-      type: "manual",
-      heating: [170],
-      heatingUnit: "c"
-    })
+    const edge = mrr.edge("e2")
+    if (edge.settings) {
+      const s = edge.settings[0]
+      assert.equal(s.toolId, "microwaveOven")
+      assert.deepEqual(s.data, {
+        time: [1140],
+        type: "manual",
+        heating: [170],
+        heatingUnit: "c"
+      })
+    } else {
+      assert.fail("No settings")
+    }
   })
 
   it("intermediate has kind", () => {

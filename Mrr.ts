@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import {Type, plainToClass} from "class-transformer";
+import {Type, Expose, plainToClass} from "class-transformer";
 
 class QuantityElement {
   unitId: string
@@ -35,7 +35,9 @@ class MrrEdge {
 class MrrNode {
   id: string
   kind: string = "intermediate"
-  xCookpadName: string
+  xCookpadName: string | null
+  @Expose({ name: "name" })
+  _name: string | null
   quantity: Quantity
   state: string
   hrrStepNo: number
@@ -44,7 +46,7 @@ class MrrNode {
   rawData: any
 
   get name() {
-    return this.xCookpadName
+    return this.xCookpadName || this._name
   }
 }
 class IngredientNode extends MrrNode {

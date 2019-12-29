@@ -7,13 +7,11 @@ class QuantityElement {
   amount: number
   amountExpression: string
   coefficient: string
-  rawData: any
 }
 
 class Quantity {
   @Type(() => QuantityElement)
   elements: QuantityElement[]
-  rawData: any
 }
 
 class Setting {
@@ -32,7 +30,6 @@ class MrrEdge {
   hrrStepNo: number
   hrrStepTextRange: number[]
   mrr: Mrr
-  rawData: any
 }
 class MrrNode {
   id: string
@@ -46,7 +43,6 @@ class MrrNode {
   hrrStepNo: number
   nutrition: string
   mrr: Mrr
-  rawData: any
 
   get name() {
     return this.xCookpadName || this._name
@@ -61,13 +57,11 @@ class IngredientNode extends MrrNode {
   alternativeFoodCompositionIds: string[]
   alternativeFoodCategoryIds: string[]
   mrr: Mrr
-  rawData: any
 }
 class IngredientGroup {
   ingredientGroupMark: String
   nodeIds: String[]
   mrr: Mrr
-  rawData: any
 }
 class Mrr {
   xCookpadRecipeUrl?: string
@@ -94,8 +88,6 @@ class Mrr {
   createdAt: Date
   @Type(() => Date)
   hrrUpdatedAt: Date
-
-  rawData: any
 
   _ingredients: IngredientNode[]
   _terminal: MrrNode

@@ -100,6 +100,11 @@ class IngredientGroup {
   ingredientGroupMark!: String
   nodeIds!: String[]
 }
+class SubGraph {
+  kind!: string
+  nodeIds!: string[]
+  edgeIds!: string[]
+}
 class Mrr {
   xCookpadRecipeUrl?: string
   @Expose({ name: "recipeUrl" })
@@ -131,7 +136,8 @@ class Mrr {
   edges!: MrrEdge[]
   @Type(() => IngredientGroup)
   ingredientGroups?: IngredientGroup[]
-  subGraphs?: any
+  @Type(() => SubGraph)
+  subGraphs!: SubGraph[]
 
   @Type(() => Date)
   createdAt!: Date

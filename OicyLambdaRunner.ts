@@ -8,35 +8,6 @@ import {classToPlain} from "class-transformer";
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const toObj = (obj: any): any => {
-  if (typeof obj != "object") {
-    return obj
-  }
-  if (Array.isArray(obj)) {
-    return obj.map(v => toObj(v))
-  }
-
-  const ret: any = {}
-  Object.keys(obj).forEach(k => {
-    ret[k] = toObj(obj[k])
-  })
-  return ret
-}
-
-/**
- * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-
-const stringToObject = o => {
-  if (typeof o == "string") {
-    return JSON.parse(o)
-  } else {
-    return o
-  }
-}*/
-
-/**
- * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
- */
 const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) => {
   const mrr = Mrr.convert(classToPlain(event.mrr))
   let hrr: Hrr | undefined;
@@ -58,7 +29,7 @@ const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) 
     const triggers = commandCreator.triggers(request, triggerCreator)
 
     if (triggers.length > 0) {
-      return toObj(triggers)
+      return triggers
     } else {
       return {}
     }
@@ -66,7 +37,7 @@ const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) 
     const command = new OicyCommand()
     commandCreator.create(request, command)
 
-    return toObj(command)
+    return command
   }
 
   const response = new OicyResponse()
@@ -74,7 +45,7 @@ const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) 
     Reflect.get(commandCreator, callback)
   method.call(commandCreator, request, response)
 
-  return toObj(response)
+  return response
 }
 
 export { OicyLambdaRunner }

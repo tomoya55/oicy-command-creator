@@ -2,11 +2,11 @@ import 'reflect-metadata';
 import {Type, Expose, plainToClass} from "class-transformer";
 
 class QuantityElement {
-  unitId: string
-  subUnitIds: string[]
-  amount: number
-  amountExpression: string
-  coefficient: string
+  unitId?: string
+  subUnitIds?: string[]
+  amount?: number
+  amountExpression?: string
+  coefficient?: string
 }
 
 class Quantity {
@@ -23,12 +23,12 @@ class MrrEdge {
   id: string
   kind: string
   actionId: string
-  toolIds: string[]
+  toolIds?: string[]
   @Type(() => Setting)
-  settings: Setting[]
-  order: string
-  hrrStepNo: number
-  hrrStepTextRange: number[]
+  settings?: Setting[]
+  order?: string
+  hrrStepNo?: number
+  hrrStepTextRange?: number[]
   mrr: Mrr
 
   setMrr(mrr: Mrr): void {
@@ -42,10 +42,10 @@ class MrrNode {
   @Expose({ name: "name" })
   _name?: string
   @Type(() => Quantity)
-  quantity: Quantity
-  state: string
-  hrrStepNo: number
-  nutrition: string
+  quantity?: Quantity
+  state?: string
+  hrrStepNo?: number
+  nutrition?: string
   mrr: Mrr
 
   get name() {

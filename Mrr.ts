@@ -11,39 +11,39 @@ class QuantityElement {
 
 class Quantity {
   @Type(() => QuantityElement)
-  elements: QuantityElement[]
+  elements!: QuantityElement[]
 }
 
 class Setting {
-  toolId: string
-  data: any
+  toolId!: string
+  data!: any
 }
 
 class MrrEdge {
-  id: string
-  kind: string
-  actionId: string
+  id!: string
+  kind!: string
+  actionId!: string
   toolIds?: string[]
   @Type(() => Setting)
   settings?: Setting[]
   order?: string
   hrrStepNo?: number
   hrrStepTextRange?: number[]
-  mrr: Mrr
+  mrr!: Mrr
 
   setMrr(mrr: Mrr): void {
     this.mrr = mrr
   }
 }
 abstract class MrrNode {
-  id: string
+  id!: string
   xCookpadName?: string
   @Expose({ name: "name" })
   _name?: string
   state?: string
   hrrStepNo?: number
   nutrition?: string
-  mrr: Mrr
+  mrr!: Mrr
 
   get name(): string {
     return this.xCookpadName || this._name || ""
@@ -58,21 +58,21 @@ abstract class MrrNode {
 }
 class IngredientNode extends MrrNode {
   @Type(() => Quantity)
-  quantity: Quantity
-  foodCompositionId: string
-  foodCategoryId: string
-  hrrIngredientPosition: number
-  ingredientPosition: number
-  ingredientGroupMark: string
-  alternativeFoodCompositionIds: string[]
-  alternativeFoodCategoryIds: string[]
+  quantity!: Quantity
+  foodCompositionId?: string
+  foodCategoryId?: string
+  hrrIngredientPosition?: number
+  ingredientPosition?: number
+  ingredientGroupMark?: string
+  alternativeFoodCompositionIds?: string[]
+  alternativeFoodCategoryIds?: string[]
   get kind(): string {
     return "ingredient"
   }
 }
 class TerminalNode extends MrrNode {
   @Type(() => Quantity)
-  quantity: Quantity
+  quantity!: Quantity
   get kind(): string {
     return "terminal"
   }
@@ -97,8 +97,8 @@ class AmbiguousNode extends MrrNode {
 }
 type NodeType = IngredientNode | TerminalNode | DisuseNode | IntermediateNode | AmbiguousNode
 class IngredientGroup {
-  ingredientGroupMark: String
-  nodeIds: String[]
+  ingredientGroupMark!: String
+  nodeIds!: String[]
 }
 class Mrr {
   xCookpadRecipeUrl?: string
@@ -109,9 +109,9 @@ class Mrr {
   @Expose({ name: "recipeId" })
   _recipeId?: string
 
-  formatVersion: string
-  lcid: string
-  authorName: string
+  formatVersion!: string
+  lcid!: string
+  authorName!: string
 
   @Type(() => MrrNode, {
       discriminator: {
@@ -126,22 +126,22 @@ class Mrr {
       },
       keepDiscriminatorProperty: true
     })
-  nodes: NodeType[]
+  nodes!: NodeType[]
   @Type(() => MrrEdge)
-  edges: MrrEdge[]
+  edges!: MrrEdge[]
   @Type(() => IngredientGroup)
-  ingredientGroups: IngredientGroup[]
-  subGraphs: any
+  ingredientGroups?: IngredientGroup[]
+  subGraphs?: any
 
   @Type(() => Date)
-  createdAt: Date
+  createdAt!: Date
   @Type(() => Date)
-  hrrUpdatedAt: Date
+  hrrUpdatedAt!: Date
 
-  _ingredients: IngredientNode[]
-  _terminal: TerminalNode
-  _edgeById: any
-  _nodeById: any
+  _ingredients!: IngredientNode[]
+  _terminal!: TerminalNode
+  _edgeById!: any
+  _nodeById!: any
 
   get recipeUrl() {
     return this.xCookpadRecipeUrl || this._recipeUrl
@@ -169,7 +169,7 @@ class Mrr {
     return this._ingredients
   }
 
-  node(id): NodeType {
+  node(id: string): NodeType {
     if (this._nodeById && this._nodeById[id]) {
       return this._nodeById[id]
     }
@@ -184,7 +184,7 @@ class Mrr {
     }
   }
 
-  edge(id): MrrEdge {
+  edge(id: string): MrrEdge {
     if (this._edgeById && this._edgeById[id]) {
       return this._edgeById[id]
     }

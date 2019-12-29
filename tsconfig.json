@@ -14,7 +14,7 @@
       "node",
       "mocha"
     ],
-    "strictNullChecks": true,
+    "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,

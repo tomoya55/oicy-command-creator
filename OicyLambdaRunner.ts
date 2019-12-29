@@ -3,11 +3,12 @@ import { Mrr } from "./Mrr"
 import { OicyRequest, UserDevice } from "./OicyRequest"
 import { OicyCommand, OicyResponse, OicyTriggerCreator } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
+import {classToPlain} from "class-transformer";
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const toObj = obj => {
+const toObj = (obj: any): any => {
   if (typeof obj != "object") {
     return obj
   }
@@ -15,7 +16,7 @@ const toObj = obj => {
     return obj.map(v => toObj(v))
   }
 
-  const ret = {}
+  const ret: any = {}
   Object.keys(obj).forEach(k => {
     ret[k] = toObj(obj[k])
   })
@@ -24,30 +25,30 @@ const toObj = obj => {
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
- */
+
 const stringToObject = o => {
   if (typeof o == "string") {
     return JSON.parse(o)
   } else {
     return o
   }
-}
+}*/
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
-  const mrr = Mrr.convert(stringToObject(event.mrr))
-  let hrr: Hrr | null = null
+const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) => {
+  const mrr = Mrr.convert(classToPlain(event.mrr))
+  let hrr: Hrr | undefined;
   if (event.hrr) {
-    hrr = Hrr.convert(stringToObject(event.hrr))
+    hrr = Hrr.convert(classToPlain(event.hrr))
   }
   const params = event.params
-  const targetSubMrrKeys = stringToObject(event.targetSubMrrKeys || {})
+  const targetSubMrrKeys = classToPlain(event.targetSubMrrKeys || {})
   const changedServingsForRate = Number(event.changedServingsForRate) || 1
-  let device: UserDevice | null = null
+  let device: UserDevice | undefined;
   if (event.device) {
-    device = UserDevice.convert(stringToObject(event.device))
+    device = UserDevice.convert(classToPlain(JSON.parse(event.device)))
   }
   const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   const callback = event.callback
@@ -69,7 +70,9 @@ const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
   }
 
   const response = new OicyResponse()
-  commandCreator[callback].call(commandCreator, request, response)
+  const method: (arg1: OicyCommandCreator, arg2: OicyRequest, arg3: OicyResponse) => void =
+    Reflect.get(commandCreator, callback)
+  method.call(commandCreator, request, response)
 
   return toObj(response)
 }

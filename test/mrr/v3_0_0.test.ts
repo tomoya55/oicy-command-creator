@@ -87,7 +87,11 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.terminal.constructor.name, "TerminalNode")
     assert.equal(mrr.terminal.quantity.constructor.name, "Quantity")
     assert.equal(mrr.terminal.quantity.elements[0].constructor.name, "QuantityElement")
-    assert.equal(mrr.ingredientGroups[0].constructor.name, "IngredientGroup")
+    if (mrr.ingredientGroups) {
+      assert.equal(mrr.ingredientGroups[0].constructor.name, "IngredientGroup")
+    } else {
+      assert.fail("No ingredientGroups")
+    }
     assert.equal(mrr.ingredients[0].constructor.name, "IngredientNode")
   })
   it("having terminal", () => {
@@ -99,9 +103,13 @@ describe("Mrr V3 4351780", () => {
   })
 
   it("having ingredientGroups", () => {
-    assert.equal(mrr.ingredientGroups.length, 1)
-    assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
-    assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
+    if (mrr.ingredientGroups) {
+      assert.equal(mrr.ingredientGroups.length, 1)
+      assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
+      assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
+    } else {
+      assert.fail("No ingredientGroups")
+    }
   })
 
   it("having servingsFor", () => {

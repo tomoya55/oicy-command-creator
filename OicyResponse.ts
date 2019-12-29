@@ -1,17 +1,17 @@
 import { TargetSubMrrKeys } from "./OicyRequest"
 
 class View {
-  name: string
-  props: {}
+  name!: string
+  props!: any
 }
 class OicyResponse {
   view: View = new View()
 }
 class OicyTrigger extends OicyResponse {
-  position: string
-  linkText: string
-  readonly targetSubMrrKeys: TargetSubMrrKeys
-  callback: string
+  position!: string
+  linkText!: string
+  readonly targetSubMrrKeys!: TargetSubMrrKeys
+  callback!: string
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -24,11 +24,11 @@ class OicyTrigger extends OicyResponse {
   /**
    * @param range Number Array
    */
-  setStepPosition(stepIndex, range) {
+  setStepPosition(stepIndex: number, range: string[]) {
     this.position = `-device-view-step${stepIndex} ${range.join(",")}`
   }
 
-  setIngredientBeforePosition(ingredientIndex) {
+  setIngredientBeforePosition(ingredientIndex: number) {
     this.position = `-device-view-ingredient${ingredientIndex}-before`
   }
 }
@@ -44,11 +44,11 @@ enum URLSchema {
   HTTPS = 2,
 }
 class OicyCommand extends OicyResponse {
-  urlSchema: URLSchema
-  httpMethod: HttpMethod
-  domain: string
-  path: string
-  data: string
+  urlSchema!: URLSchema
+  httpMethod!: HttpMethod
+  domain!: string
+  path!: string
+  data!: string
 }
 
 class OicyTriggerCreator {

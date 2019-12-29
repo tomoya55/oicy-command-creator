@@ -38,6 +38,7 @@ class MrrNode {
   xCookpadName?: string
   @Expose({ name: "name" })
   _name?: string
+  @Type(() => Quantity)
   quantity: Quantity
   state: string
   hrrStepNo: number

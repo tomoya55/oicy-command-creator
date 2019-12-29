@@ -70,6 +70,10 @@ describe("Mrr V3 2048398", () => {
 })
 describe("Mrr V3 4351780", () => {
   const mrr = Mrr.convert(json4351780)
+  it("has correct types", () => {
+    assert.equal(mrr.constructor.name, "Mrr")
+    assert.equal(mrr.terminal.quantity.constructor.name, "Quantity")
+  })
   it("having terminal", () => {
     assert.equal(mrr.terminal.id, "1")
     assert.equal(mrr.terminal.name, "《ストウブで作る》肉じゃが☆")

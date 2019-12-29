@@ -123,7 +123,8 @@ class Mrr {
           { value: AmbiguousNode, name: "ambiguous" },
           { value: IntermediateNode, name: "intermediate" }
         ]
-      }
+      },
+      keepDiscriminatorProperty: true
     })
   nodes: NodeType[]
   @Type(() => MrrEdge)
@@ -175,9 +176,7 @@ class Mrr {
     if (!this._nodeById) {
       this._nodeById = {}
     }
-    this.nodes.forEach(v => {
-      this._nodeById[v.id] = v
-    })
+    this.nodes.forEach(v => this._nodeById[v.id] = v)
     if (this._nodeById[id]) {
       return this._nodeById[id]
     } else {
@@ -210,7 +209,6 @@ class Mrr {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   static convert(obj: any): Mrr {
-
     const mrr = plainToClass(Mrr, obj)
     mrr.nodes.forEach(v => v.setMrr(mrr))
     mrr.edges.forEach(v => v.setMrr(mrr))

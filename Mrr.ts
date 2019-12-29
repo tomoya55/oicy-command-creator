@@ -34,7 +34,7 @@ class MrrEdge {
 }
 class MrrNode {
   id: string
-  kind: string
+  kind: string = "intermediate"
   xCookpadName: string
   quantity: Quantity
   state: string
@@ -57,8 +57,6 @@ class IngredientNode extends MrrNode {
   alternativeFoodCategoryIds: string[]
   mrr: Mrr
   rawData: any
-
-  //self.kind = "ingredient"
 }
 class IngredientGroup {
   ingredientGroupMark: String
@@ -72,6 +70,7 @@ class Mrr {
   formatVersion: string
   lcid: string
   authorName: string
+  @Type(() => MrrNode)
   nodes: MrrNode[]
   edges: MrrEdge[]
   ingredientGroups: IngredientGroup[]
@@ -87,6 +86,7 @@ class Mrr {
   _ingredients: IngredientNode[]
   _terminal: MrrNode
   _edgeById: any
+  _nodeById: any
 
   get recipeUrl() {
     return this.xCookpadRecipeUrl
@@ -114,7 +114,24 @@ class Mrr {
     return this._ingredients
   }
 
-  edge(id) {
+  node(id): MrrNode {
+    if (this._nodeById && this._nodeById[id]) {
+      return this._nodeById[id]
+    }
+    if (!this._nodeById) {
+      this._nodeById = {}
+    }
+    this.nodes.forEach(v => {
+      this._nodeById[v.id] = v
+    })
+    if (this._nodeById[id]) {
+      return this._nodeById[id]
+    } else {
+      throw "Not found id=" + id
+    }
+  }
+
+  edge(id): MrrEdge {
     if (this._edgeById && this._edgeById[id]) {
       return this._edgeById[id]
     }

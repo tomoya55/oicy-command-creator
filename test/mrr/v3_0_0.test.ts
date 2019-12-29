@@ -59,6 +59,14 @@ describe("Mrr V3 2048398", () => {
       heatingUnit: "c"
     })
   })
+
+  it("intermediate has kind", () => {
+    const intermediate: any = {"id": "n100"}
+    json2048398.nodes.push(intermediate)
+    const mrr_with_intermediate = Mrr.convert(json2048398)
+    const n = mrr_with_intermediate.node('n100')
+    assert.equal(n.kind, "intermediate")
+  })
 })
 describe("Mrr V3 4351780", () => {
   const mrr = Mrr.convert(json4351780)

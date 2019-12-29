@@ -30,6 +30,10 @@ class MrrEdge {
   hrrStepNo: number
   hrrStepTextRange: number[]
   mrr: Mrr
+
+  setMrr(mrr: Mrr): void {
+    this.mrr = mrr
+  }
 }
 class MrrNode {
   id: string
@@ -47,6 +51,10 @@ class MrrNode {
   get name() {
     return this.xCookpadName || this._name
   }
+
+  setMrr(mrr: Mrr): void {
+    this.mrr = mrr
+  }
 }
 class IngredientNode extends MrrNode {
   foodCompositionId: string
@@ -56,12 +64,10 @@ class IngredientNode extends MrrNode {
   ingredientGroupMark: string
   alternativeFoodCompositionIds: string[]
   alternativeFoodCategoryIds: string[]
-  mrr: Mrr
 }
 class IngredientGroup {
   ingredientGroupMark: String
   nodeIds: String[]
-  mrr: Mrr
 }
 class Mrr {
   xCookpadRecipeUrl?: string
@@ -172,6 +178,8 @@ class Mrr {
         }
       }
     }
+    mrr.nodes.forEach(v => v.setMrr(mrr))
+    mrr.edges.forEach(v => v.setMrr(mrr))
     return mrr
   }
 }

@@ -35,9 +35,9 @@ class MrrEdge {
 class MrrNode {
   id: string
   kind: string = "intermediate"
-  xCookpadName: string | null
+  xCookpadName?: string
   @Expose({ name: "name" })
-  _name: string | null
+  _name?: string
   quantity: Quantity
   state: string
   hrrStepNo: number
@@ -67,11 +67,18 @@ class IngredientGroup {
   rawData: any
 }
 class Mrr {
-  xCookpadRecipeUrl: string
-  xCookpadRecipeId: string
+  xCookpadRecipeUrl?: string
+  @Expose({ name: "recipeUrl" })
+  _recipeUrl?: string
+
+  xCookpadRecipeId?: string
+  @Expose({ name: "recipeId" })
+  _recipeId?: string
+
   formatVersion: string
   lcid: string
   authorName: string
+
   @Type(() => MrrNode)
   nodes: MrrNode[]
   edges: MrrEdge[]
@@ -91,10 +98,10 @@ class Mrr {
   _nodeById: any
 
   get recipeUrl() {
-    return this.xCookpadRecipeUrl
+    return this.xCookpadRecipeUrl || this._recipeUrl
   }
   get recipeId() {
-    return this.xCookpadRecipeId
+    return this.xCookpadRecipeId || this._recipeId
   }
 
   get terminal() {
@@ -153,9 +160,6 @@ class Mrr {
   targetNodes(ids: string[], kind?: string) {
     return this.nodes.filter(n => ids.indexOf(n.id) != -1 && (!kind || n.kind == kind))
   }
-
-  //self.xCookpadRecipeUrl = toS(obj.recipeUrl || obj.xCookpadRecipeUrl)
-  //self.xCookpadRecipeId = toS(obj.recipeId || obj.xCookpadRecipeId)
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>

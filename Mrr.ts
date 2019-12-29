@@ -35,21 +35,21 @@ class MrrEdge {
     this.mrr = mrr
   }
 }
-class MrrNode {
+abstract class MrrNode {
   id: string
-  kind: string = "intermediate"
   xCookpadName?: string
   @Expose({ name: "name" })
   _name?: string
-  @Type(() => Quantity)
-  quantity?: Quantity
   state?: string
   hrrStepNo?: number
   nutrition?: string
   mrr: Mrr
 
-  get name() {
-    return this.xCookpadName || this._name
+  get name(): string {
+    return this.xCookpadName || this._name || ""
+  }
+  get kind(): string {
+    return "intermediate"
   }
 
   setMrr(mrr: Mrr): void {
@@ -57,6 +57,8 @@ class MrrNode {
   }
 }
 class IngredientNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity: Quantity
   foodCompositionId: string
   foodCategoryId: string
   hrrIngredientPosition: number
@@ -64,7 +66,36 @@ class IngredientNode extends MrrNode {
   ingredientGroupMark: string
   alternativeFoodCompositionIds: string[]
   alternativeFoodCategoryIds: string[]
+  get kind(): string {
+    return "ingredient"
+  }
 }
+class TerminalNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity: Quantity
+  get kind(): string {
+    return "terminal"
+  }
+}
+class DisuseNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+  get kind(): string {
+    return "disuse"
+  }
+}
+class IntermediateNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+}
+class AmbiguousNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+  get kind(): string {
+    return "ambiguous"
+  }
+}
+type NodeType = IngredientNode | TerminalNode | DisuseNode | IntermediateNode | AmbiguousNode
 class IngredientGroup {
   ingredientGroupMark: String
   nodeIds: String[]
@@ -82,8 +113,19 @@ class Mrr {
   lcid: string
   authorName: string
 
-  @Type(() => MrrNode)
-  nodes: MrrNode[]
+  @Type(() => MrrNode, {
+      discriminator: {
+        property: "kind",
+        subTypes: [
+          { value: IngredientNode, name: "ingredient" },
+          { value: TerminalNode, name: "terminal" },
+          { value: DisuseNode, name: "disuse" },
+          { value: AmbiguousNode, name: "ambiguous" },
+          { value: IntermediateNode, name: "intermediate" }
+        ]
+      }
+    })
+  nodes: NodeType[]
   @Type(() => MrrEdge)
   edges: MrrEdge[]
   @Type(() => IngredientGroup)
@@ -96,7 +138,7 @@ class Mrr {
   hrrUpdatedAt: Date
 
   _ingredients: IngredientNode[]
-  _terminal: MrrNode
+  _terminal: TerminalNode
   _edgeById: any
   _nodeById: any
 
@@ -107,11 +149,11 @@ class Mrr {
     return this.xCookpadRecipeId || this._recipeId
   }
 
-  get terminal() {
+  get terminal(): TerminalNode {
     if (this._terminal) {
       return this._terminal
     }
-    this._terminal = this.nodes.filter(n => n.kind == "terminal")[0]
+    this._terminal = this.nodes.filter(n => n.kind == "terminal")[0] as TerminalNode
     return this._terminal
   }
   get servingsFor() {
@@ -126,7 +168,7 @@ class Mrr {
     return this._ingredients
   }
 
-  node(id): MrrNode {
+  node(id): NodeType {
     if (this._nodeById && this._nodeById[id]) {
       return this._nodeById[id]
     }
@@ -167,17 +209,9 @@ class Mrr {
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
-  static convert(obj): Mrr {
+  static convert(obj: any): Mrr {
+
     const mrr = plainToClass(Mrr, obj)
-    for (let index in mrr.nodes) {
-      if(obj.nodes[index].kind == 'ingredient') {
-        if(mrr.nodes[index].kind == 'ingredient') {
-          mrr.nodes[index] = plainToClass(IngredientNode, obj.nodes[index])
-        } else {
-          throw "Unmutch type of ingredient"
-        }
-      }
-    }
     mrr.nodes.forEach(v => v.setMrr(mrr))
     mrr.edges.forEach(v => v.setMrr(mrr))
     return mrr

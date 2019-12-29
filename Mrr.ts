@@ -170,7 +170,17 @@ class Mrr {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   static convert(obj): Mrr {
-    return plainToClass(Mrr, obj);
+    const mrr = plainToClass(Mrr, obj)
+    for (let index in mrr.nodes) {
+      if(obj.nodes[index].kind == 'ingredient') {
+        if(mrr.nodes[index].kind == 'ingredient') {
+          mrr.nodes[index] = plainToClass(IngredientNode, obj.nodes[index])
+        } else {
+          throw "Unmutch type of ingredient"
+        }
+      }
+    }
+    return mrr
   }
 }
 

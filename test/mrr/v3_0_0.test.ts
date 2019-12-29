@@ -78,7 +78,9 @@ describe("Mrr V3 4351780", () => {
     assert.equal(mrr.terminal.quantity.constructor.name, "Quantity")
     assert.equal(mrr.terminal.quantity.elements[0].constructor.name, "QuantityElement")
     assert.equal(mrr.ingredientGroups[0].constructor.name, "IngredientGroup")
+    assert.equal(mrr.ingredients[0].constructor.name, "IngredientNode")
   })
+
   it("having terminal", () => {
     assert.equal(mrr.terminal.id, "1")
     assert.equal(mrr.terminal.name, "《ストウブで作る》肉じゃが☆")

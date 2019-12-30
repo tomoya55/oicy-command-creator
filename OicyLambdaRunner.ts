@@ -1,13 +1,14 @@
 import { Hrr } from "./Hrr"
 import { Mrr } from "./Mrr"
 import { OicyRequest, UserDevice } from "./OicyRequest"
-import { OicyCommand, OicyResponse, OicyTriggerCreator } from "./OicyResponse"
+import { OicyCommand, OicyResponse, OicyTriggerCreator, OicyTrigger } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) => {
+const OicyLambdaRunner =
+  async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTrigger[] | OicyResponse | OicyCommand> => {
   const mrr = Mrr.convert(event.mrr)
   let hrr: Hrr | undefined;
   if (event.hrr) {
@@ -33,11 +34,7 @@ const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) 
     const triggerCreator = new OicyTriggerCreator()
     const triggers = commandCreator.triggers(request, triggerCreator)
 
-    if (triggers.length > 0) {
-      return triggers
-    } else {
-      return {}
-    }
+    return triggers
   } else if (callback == "create") {
     const command = new OicyCommand()
     commandCreator.create(request, command)

@@ -2,15 +2,21 @@ import { Mrr } from "./Mrr"
 import { Hrr } from "./Hrr"
 
 class UserDevice {
-  readonly deviceId!: string
-  readonly deviceTypeNumber!: string
-  readonly deviceModelName!: string
-  readonly nickname!: string
+  readonly deviceId: string
+  readonly deviceTypeNumber: string
+  readonly deviceModelName: string
+  readonly nickname: string
 
-  static convert(obj: any): UserDevice {
-    const self = new UserDevice()
-    Object.keys(obj).forEach(k => Reflect.set(self, k, obj[k]))
-    return self
+  constructor(
+    deviceId: string,
+    deviceTypeNumber: string,
+    deviceModelName: string,
+    nickname: string
+    ) {
+      this.deviceId = deviceId
+      this.deviceTypeNumber = deviceTypeNumber
+      this.deviceModelName = deviceModelName
+      this.nickname = nickname
   }
 }
 
@@ -18,12 +24,12 @@ class UserDevice {
  * Target nodes & edges for this DeviceAction
  */
 class TargetSubMrrKeys {
-  readonly nodeIds!: string[]
-  readonly edgeIds!: string[]
+  readonly nodeIds: string[]
+  readonly edgeIds: string[]
 
   constructor(nodeIds: string[], edgeIds: string[]) {
-    this.nodeIds = nodeIds || []
-    this.edgeIds = edgeIds || []
+    this.nodeIds = nodeIds
+    this.edgeIds = edgeIds
   }
 }
 

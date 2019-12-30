@@ -3,23 +3,28 @@ import { Mrr } from "./Mrr"
 import { OicyRequest, UserDevice } from "./OicyRequest"
 import { OicyCommand, OicyResponse, OicyTriggerCreator } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
-import {classToPlain} from "class-transformer";
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
 const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) => {
-  const mrr = Mrr.convert(classToPlain(event.mrr))
+  const mrr = Mrr.convert(event.mrr)
   let hrr: Hrr | undefined;
   if (event.hrr) {
-    hrr = Hrr.convert(classToPlain(event.hrr))
+    hrr = Hrr.convert(event.hrr)
   }
   const params = event.params
-  const targetSubMrrKeys = classToPlain(event.targetSubMrrKeys || {})
+  const targetSubMrrKeys = event.targetSubMrrKeys || {}
   const changedServingsForRate = Number(event.changedServingsForRate) || 1
   let device: UserDevice | undefined;
   if (event.device) {
-    device = UserDevice.convert(classToPlain(JSON.parse(event.device)))
+    const deviceObj: any = JSON.parse(event.device)
+    device = new UserDevice(
+      deviceObj.deviceId as string,
+      deviceObj.deviceTypeNumber as string,
+      deviceObj.deviceModelName as string,
+      deviceObj.nickname as string
+    )
   }
   const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   const callback = event.callback

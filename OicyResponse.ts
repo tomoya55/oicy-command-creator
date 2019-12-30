@@ -8,10 +8,10 @@ class OicyResponse {
   view: View = new View()
 }
 class OicyTrigger extends OicyResponse {
-  position!: string
-  linkText!: string
-  readonly targetSubMrrKeys!: TargetSubMrrKeys
-  callback!: string
+  position?: string
+  linkText?: string
+  readonly targetSubMrrKeys: TargetSubMrrKeys
+  callback?: string
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -44,15 +44,15 @@ enum URLSchema {
   HTTPS = 2,
 }
 class OicyCommand extends OicyResponse {
-  urlSchema!: URLSchema
-  httpMethod!: HttpMethod
-  domain!: string
-  path!: string
-  data!: string
+  urlSchema?: URLSchema
+  httpMethod?: HttpMethod
+  domain?: string
+  path?: string
+  data?: string
 }
 
 class OicyTriggerCreator {
-  create(nodeIds: string[], edgeIds: string[]) {
+  create(nodeIds: string[], edgeIds: string[]): OicyTrigger {
     return new OicyTrigger(nodeIds, edgeIds)
   }
 }

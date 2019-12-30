@@ -43,6 +43,8 @@ const OicyLambdaRunner = async (event: any, commandCreator: OicyCommandCreator) 
     commandCreator.create(request, command)
 
     return command
+  } else if (!callback) {
+    throw "Undefined callback"
   }
 
   const response = new OicyResponse()

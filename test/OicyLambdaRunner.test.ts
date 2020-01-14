@@ -33,8 +33,10 @@ describe("OicyLambdaRunner", () => {
     }
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
-    assert.deepEqual(ret.view, {})
-    assert.equal(ret.data, undefined)
+    if (ret instanceof OicyCommand) {
+      assert.deepEqual(ret.view, {})
+      assert.equal(ret.data, undefined)
+    }
   })
 
   it("OiCyRequest has the device info", async () => {
@@ -45,7 +47,9 @@ describe("OicyLambdaRunner", () => {
     }
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
-    assert.deepEqual(ret.view, {})
-    assert.equal(ret.data, "t=OCY-001&m=OiCyDevice")
+    if (ret instanceof OicyCommand) {
+      assert.deepEqual(ret.view, {})
+      assert.equal(ret.data, "t=OCY-001&m=OiCyDevice")
+    }
   })
 })

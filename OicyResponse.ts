@@ -32,6 +32,12 @@ export class OicyTrigger extends OicyResponse {
     this.position = `-device-view-ingredient${ingredientIndex}-before`
   }
 }
+export class OicyTriggerSet {
+  triggers: OicyTrigger[]
+  constructor() {
+    this.triggers = new Array<OicyTrigger>();
+  }
+}
 export enum HttpMethod {
   GET = 1,
   POST = 2,

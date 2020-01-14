@@ -45,7 +45,7 @@ const OicyLambdaRunner =
   }
 
   const response = new OicyResponse()
-  const method: (arg1: OicyCommandCreator, arg2: OicyRequest, arg3: OicyResponse) => void =
+  const method: (arg1: OicyRequest, arg2: OicyResponse) => void =
     Reflect.get(commandCreator, callback)
   method.call(commandCreator, request, response)
 

@@ -21,7 +21,6 @@ class Setting {
 
 class MrrEdge {
   id!: string
-  kind!: string
   actionId!: string
   toolIds?: string[]
   @Type(() => Setting)

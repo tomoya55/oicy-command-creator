@@ -36,6 +36,8 @@ describe("OicyLambdaRunner", () => {
     if (ret instanceof OicyCommand) {
       assert.deepEqual(ret.view, {})
       assert.equal(ret.data, undefined)
+    } else {
+      assert.fail("ret is not OicyCommand")
     }
   })
 
@@ -50,6 +52,8 @@ describe("OicyLambdaRunner", () => {
     if (ret instanceof OicyCommand) {
       assert.deepEqual(ret.view, {})
       assert.equal(ret.data, "t=OCY-001&m=OiCyDevice")
+    } else {
+      assert.fail("ret is not OicyCommand")
     }
   })
 })

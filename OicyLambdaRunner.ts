@@ -9,7 +9,7 @@ import { OicyCommandCreator } from "./OicyCommandCreator"
  */
 const OicyLambdaRunner =
   async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTrigger[] | OicyResponse | OicyCommand> => {
-  const mrr = Mrr.convert(event.mrr)
+  const mrr = Mrr.convert(event.mrr, {withNodeNormalizing: true})
   let hrr: Hrr | undefined;
   if (event.hrr) {
     hrr = Hrr.convert(event.hrr)

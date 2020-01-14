@@ -47,9 +47,7 @@ abstract class MrrNode {
   get name(): string {
     return this.xCookpadName || this._name || ""
   }
-  get kind(): string {
-    return "intermediate"
-  }
+  abstract get kind(): string;
 
   setMrr(mrr: Mrr): void {
     this.mrr = mrr
@@ -86,6 +84,9 @@ class DisuseNode extends MrrNode {
 class IntermediateNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
+  get kind(): string {
+    return "intermediate"
+  }
 }
 class AmbiguousNode extends MrrNode {
   @Type(() => Quantity)
@@ -212,8 +213,17 @@ class Mrr {
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
+   * withNodeNormalizing: when this is true, convert method will change input obj.
+   *   e.g., filling kind property of node (intermediate).
    */
-  static convert(obj: any): Mrr {
+  static convert(obj: any, {withNodeNormalizing}: {withNodeNormalizing: boolean}): Mrr {
+    if (withNodeNormalizing) {
+      obj.nodes.forEach((v: any) => {
+        if (!v.kind) {
+          v.kind = "intermediate"
+        }
+      })
+    }
     const mrr = plainToClass(Mrr, obj)
     mrr.nodes.forEach(v => v.setMrr(mrr))
     mrr.edges.forEach(v => v.setMrr(mrr))

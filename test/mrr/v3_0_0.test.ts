@@ -35,7 +35,7 @@ describe("Mrr V3 2048398", () => {
   json2048398.subGraphs[0].edgeIds.push("e2")
   json2048398.subGraphs[0].edgeIds.push("e3")
 
-  const mrr = Mrr.convert(json2048398)
+  const mrr = Mrr.convert(json2048398, {withNodeNormalizing: true})
 
   it("e1 has settings", () => {
     const e = mrr.edges.find(x => x.actionId == "ah9")
@@ -74,14 +74,14 @@ describe("Mrr V3 2048398", () => {
   it("intermediate has kind", () => {
     const intermediate: any = {"id": "n100"}
     json2048398.nodes.push(intermediate)
-    const mrr_with_intermediate = Mrr.convert(json2048398)
+    const mrr_with_intermediate = Mrr.convert(json2048398, {withNodeNormalizing: true})
     assert.equal(mrr_with_intermediate.node('2').kind, "ingredient")
     assert.equal(mrr_with_intermediate.node('n1').kind, "ambiguous")
     assert.equal(mrr_with_intermediate.node('n100').kind, "intermediate")
   })
 })
 describe("Mrr V3 4351780", () => {
-  const mrr = Mrr.convert(json4351780)
+  const mrr = Mrr.convert(json4351780, {withNodeNormalizing: true})
   it("has correct types", () => {
     assert.equal(mrr.constructor.name, "Mrr")
     assert.equal(mrr.terminal.constructor.name, "TerminalNode")

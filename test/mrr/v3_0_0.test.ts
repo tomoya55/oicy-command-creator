@@ -79,6 +79,21 @@ describe("Mrr V3 2048398", () => {
     assert.equal(mrr_with_intermediate.node('n1').kind, "ambiguous")
     assert.equal(mrr_with_intermediate.node('n100').kind, "intermediate")
   })
+
+  it("with Coefficient", () => {
+    json2048398.nodes.forEach((v: any) => {
+      if (v.id == "2") {
+        v.quantity.elements[0]["coefficient"] = "c1"
+      }
+    })
+    const mrr_with_coef = Mrr.convert(json2048398, {withNodeNormalizing: true})
+    const n = mrr_with_coef.node('2')
+    if (n.quantity) {
+      assert.equal(n.quantity.elements[0].coefficient, "c1")
+    } else {
+      assert.fail("Invalid Mrr node")
+    }
+  })
 })
 describe("Mrr V3 4351780", () => {
   const mrr = Mrr.convert(json4351780, {withNodeNormalizing: true})

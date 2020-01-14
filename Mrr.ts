@@ -1,12 +1,13 @@
 import 'reflect-metadata';
 import {Type, Expose, plainToClass} from "class-transformer";
 
+type Coefficient = "c1" | "c2" | undefined;
 class QuantityElement {
   unitId?: string
   subUnitIds?: string[]
   amount?: number
   amountExpression?: string
-  coefficient?: string
+  coefficient: Coefficient
 }
 
 class Quantity {

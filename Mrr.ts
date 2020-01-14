@@ -34,6 +34,8 @@ class MrrEdge {
     this.mrr = mrr
   }
 }
+
+type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient";
 abstract class MrrNode {
   id!: string
   xCookpadName?: string
@@ -47,7 +49,7 @@ abstract class MrrNode {
   get name(): string {
     return this.xCookpadName || this._name || ""
   }
-  abstract get kind(): string;
+  abstract get kind(): Kind;
 
   setMrr(mrr: Mrr): void {
     this.mrr = mrr
@@ -63,35 +65,35 @@ class IngredientNode extends MrrNode {
   ingredientGroupMark?: string
   alternativeFoodCompositionIds?: string[]
   alternativeFoodCategoryIds?: string[]
-  get kind(): string {
+  get kind(): Kind {
     return "ingredient"
   }
 }
 class TerminalNode extends MrrNode {
   @Type(() => Quantity)
   quantity!: Quantity
-  get kind(): string {
+  get kind(): Kind {
     return "terminal"
   }
 }
 class DisuseNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
-  get kind(): string {
+  get kind(): Kind {
     return "disuse"
   }
 }
 class IntermediateNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
-  get kind(): string {
+  get kind(): Kind {
     return "intermediate"
   }
 }
 class AmbiguousNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
-  get kind(): string {
+  get kind(): Kind {
     return "ambiguous"
   }
 }

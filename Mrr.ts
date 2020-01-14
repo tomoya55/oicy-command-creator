@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import {Type, Expose, plainToClass} from "class-transformer";
 
-type Coefficient = "c1" | "c2" | undefined;
-class QuantityElement {
+export type Coefficient = "c1" | "c2" | undefined;
+export class QuantityElement {
   unitId?: string
   subUnitIds?: string[]
   amount?: number
@@ -10,17 +10,17 @@ class QuantityElement {
   coefficient: Coefficient
 }
 
-class Quantity {
+export class Quantity {
   @Type(() => QuantityElement)
   elements!: QuantityElement[]
 }
 
-class Setting {
+export class Setting {
   toolId!: string
   data!: any
 }
 
-class MrrEdge {
+export class MrrEdge {
   id!: string
   actionId!: string
   toolIds?: string[]
@@ -36,8 +36,8 @@ class MrrEdge {
   }
 }
 
-type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient";
-abstract class MrrNode {
+export type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient";
+export abstract class MrrNode {
   id!: string
   xCookpadName?: string
   @Expose({ name: "name" })
@@ -56,7 +56,7 @@ abstract class MrrNode {
     this.mrr = mrr
   }
 }
-class IngredientNode extends MrrNode {
+export class IngredientNode extends MrrNode {
   @Type(() => Quantity)
   quantity!: Quantity
   foodCompositionId?: string
@@ -70,45 +70,45 @@ class IngredientNode extends MrrNode {
     return "ingredient"
   }
 }
-class TerminalNode extends MrrNode {
+export class TerminalNode extends MrrNode {
   @Type(() => Quantity)
   quantity!: Quantity
   get kind(): Kind {
     return "terminal"
   }
 }
-class DisuseNode extends MrrNode {
+export class DisuseNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
   get kind(): Kind {
     return "disuse"
   }
 }
-class IntermediateNode extends MrrNode {
+export class IntermediateNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
   get kind(): Kind {
     return "intermediate"
   }
 }
-class AmbiguousNode extends MrrNode {
+export class AmbiguousNode extends MrrNode {
   @Type(() => Quantity)
   quantity?: Quantity
   get kind(): Kind {
     return "ambiguous"
   }
 }
-type NodeType = IngredientNode | TerminalNode | DisuseNode | IntermediateNode | AmbiguousNode
-class IngredientGroup {
+export type NodeType = IngredientNode | TerminalNode | DisuseNode | IntermediateNode | AmbiguousNode
+export class IngredientGroup {
   ingredientGroupMark!: String
   nodeIds!: String[]
 }
-class SubGraph {
+export class SubGraph {
   kind!: string
   nodeIds!: string[]
   edgeIds!: string[]
 }
-class Mrr {
+export class Mrr {
   xCookpadRecipeUrl?: string
   @Expose({ name: "recipeUrl" })
   _recipeUrl?: string
@@ -233,5 +233,3 @@ class Mrr {
     return mrr
   }
 }
-
-export { Mrr, MrrEdge, MrrNode, Quantity }

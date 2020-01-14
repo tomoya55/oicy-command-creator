@@ -7,7 +7,7 @@ import { OicyCommandCreator } from "./OicyCommandCreator"
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const OicyLambdaRunner =
+export const OicyLambdaRunner =
   async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTrigger[] | OicyResponse | OicyCommand> => {
   const mrr = Mrr.convert(event.mrr, {withNodeNormalizing: true})
   let hrr: Hrr | undefined;
@@ -51,5 +51,3 @@ const OicyLambdaRunner =
 
   return response
 }
-
-export { OicyLambdaRunner }

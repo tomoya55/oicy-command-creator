@@ -1,22 +1,22 @@
 import 'reflect-metadata';
 import {Type, Expose, plainToClass} from "class-transformer";
 
-class HrrIngredient {
+export class HrrIngredient {
   ingredientPosition!: number
   name!: string
   quantity?: string
 }
 
-class HrrStep {
+export class HrrStep {
   stepNo!: number
   text!: string
 }
 
-class User {
+export class User {
   name!: string
 }
 
-class Hrr {
+export class Hrr {
   id!: string
   url!: string
   name!: string
@@ -56,5 +56,3 @@ class Hrr {
     return hrr
   }
 }
-
-export { Hrr, HrrIngredient, HrrStep }

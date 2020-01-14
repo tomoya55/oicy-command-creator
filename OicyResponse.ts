@@ -1,13 +1,13 @@
 import { TargetSubMrrKeys } from "./OicyRequest"
 
-class View {
+export class View {
   name!: string
   props!: any
 }
-class OicyResponse {
+export class OicyResponse {
   view: View = new View()
 }
-class OicyTrigger extends OicyResponse {
+export class OicyTrigger extends OicyResponse {
   position?: string
   linkText?: string
   readonly targetSubMrrKeys: TargetSubMrrKeys
@@ -32,18 +32,18 @@ class OicyTrigger extends OicyResponse {
     this.position = `-device-view-ingredient${ingredientIndex}-before`
   }
 }
-enum HttpMethod {
+export enum HttpMethod {
   GET = 1,
   POST = 2,
   PUT = 3,
   DELETE = 4,
   PATCH = 5,
 }
-enum URLSchema {
+export enum URLSchema {
   HTTP = 1,
   HTTPS = 2,
 }
-class OicyCommand extends OicyResponse {
+export class OicyCommand extends OicyResponse {
   urlSchema?: URLSchema
   httpMethod?: HttpMethod
   domain?: string
@@ -51,10 +51,8 @@ class OicyCommand extends OicyResponse {
   data?: string
 }
 
-class OicyTriggerCreator {
+export class OicyTriggerCreator {
   create(nodeIds: string[], edgeIds: string[]): OicyTrigger {
     return new OicyTrigger(nodeIds, edgeIds)
   }
 }
-
-export { OicyResponse, OicyTrigger, OicyCommand, OicyTriggerCreator, HttpMethod, URLSchema }

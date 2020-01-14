@@ -1,7 +1,7 @@
 import { Mrr } from "./Mrr"
 import { Hrr } from "./Hrr"
 
-class UserDevice {
+export class UserDevice {
   readonly deviceId: string
   readonly deviceTypeNumber: string
   readonly deviceModelName: string
@@ -23,7 +23,7 @@ class UserDevice {
 /**
  * Target nodes & edges for this DeviceAction
  */
-class TargetSubMrrKeys {
+export class TargetSubMrrKeys {
   readonly nodeIds: string[]
   readonly edgeIds: string[]
 
@@ -33,7 +33,7 @@ class TargetSubMrrKeys {
   }
 }
 
-class OicyRequest {
+export class OicyRequest {
   /**
    * Local code (e.g. ja-JP)
    */
@@ -88,4 +88,3 @@ class OicyRequest {
     return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   }
 }
-export { OicyRequest, TargetSubMrrKeys, UserDevice }

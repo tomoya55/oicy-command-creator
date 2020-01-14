@@ -1,7 +1,7 @@
 import { OicyTrigger, OicyCommand, OicyTriggerCreator } from "./OicyResponse"
 import { OicyRequest } from "./OicyRequest"
 
-interface OicyCommandCreator {
+export interface OicyCommandCreator {
   /**
    * Setup triggers.
    * @param oicyTriggerCreator Creator for Trigger. You must generate triggers from only this.
@@ -13,4 +13,3 @@ interface OicyCommandCreator {
    */
   create(request: OicyRequest, oicyCommand: OicyCommand): void
 }
-export { OicyCommandCreator }

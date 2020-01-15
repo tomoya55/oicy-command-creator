@@ -9,13 +9,13 @@ import { OicyCommandCreator } from "./OicyCommandCreator"
  */
 export const OicyLambdaRunner =
   async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTriggerSet | OicyResponse | OicyCommand> => {
-  const mrr = Mrr.convert(event.mrr, {withNodeNormalizing: true})
+  const mrr = Mrr.convert(JSON.parse(event.mrr), {withNodeNormalizing: true})
   let hrr: Hrr | undefined;
   if (event.hrr) {
-    hrr = Hrr.convert(event.hrr)
+    hrr = Hrr.convert(JSON.parse(event.hrr))
   }
   const params = event.params
-  const targetSubMrrKeys = event.targetSubMrrKeys || {}
+  const targetSubMrrKeys = JSON.parse(event.targetSubMrrKeys) || {}
   const changedServingsForRate = Number(event.changedServingsForRate) || 1
   let device: UserDevice | undefined;
   if (event.device) {

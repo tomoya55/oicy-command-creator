@@ -31,6 +31,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "prepublish": "npm run build",
     "test": "mocha --require espower-typescript/guess 'test/**/*.ts'",
     "typedoc": "typedoc --name OiCyCommandCreator --readme none --theme markdown --out ./docs/command_creator/ ./"
   }

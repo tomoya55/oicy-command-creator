@@ -33,7 +33,7 @@ describe("OicyLambdaRunner", () => {
   it("OiCyRequest does not have any device info", async () => {
     const event = {
       callback: "create",
-      mrr: { nodes: [], edges: [] },
+      mrr: JSON.stringify({ nodes: [], edges: [] }),
     }
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
@@ -49,7 +49,7 @@ describe("OicyLambdaRunner", () => {
     const event = {
       callback: "create",
       device: JSON.stringify({ deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" }),
-      mrr: { nodes: [], edges: [] },
+      mrr: JSON.stringify({ nodes: [], edges: [] }),
     }
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
@@ -65,7 +65,7 @@ describe("OicyLambdaRunner", () => {
     const event = {
       callback: "triggers",
       device: JSON.stringify({ deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" }),
-      mrr: { nodes: [], edges: [] },
+      mrr: JSON.stringify({ nodes: [], edges: [] }),
     }
 
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())

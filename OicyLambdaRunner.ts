@@ -10,13 +10,10 @@ import { OicyCommandCreator } from "./OicyCommandCreator"
 export const OicyLambdaRunner =
   async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTriggerSet | OicyResponse | OicyCommand> => {
   const mrr = Mrr.convert(JSON.parse(event.mrr), {withNodeNormalizing: true})
-  let hrr: Hrr | undefined;
-  if (event.hrr) {
-    hrr = Hrr.convert(JSON.parse(event.hrr))
-  }
+  const hrr = event.hrr ? Hrr.convert(JSON.parse(event.hrr)) : undefined
   const params = event.params
-  const targetSubMrrKeys = JSON.parse(event.targetSubMrrKeys) || {}
-  const changedServingsForRate = Number(event.changedServingsForRate) || 1
+  const targetSubMrrKeys = event.targetSubMrrKeys ? JSON.parse(event.targetSubMrrKeys) : {}
+  const changedServingsForRate = event.changedServingsForRate ? Number(event.changedServingsForRate) : 1
   let device: UserDevice | undefined;
   if (event.device) {
     const deviceObj: any = JSON.parse(event.device)

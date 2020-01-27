@@ -16,7 +16,7 @@ export const OicyLambdaRunner =
   const changedServingsForRate = event.changedServingsForRate ? Number(event.changedServingsForRate) : 1
   let device: UserDevice | undefined;
   if (event.device) {
-    const deviceObj: any = JSON.parse(event.device)
+    const deviceObj: any = event.device
     device = new UserDevice(
       deviceObj.deviceId as string,
       deviceObj.deviceTypeNumber as string,

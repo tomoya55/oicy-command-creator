@@ -10,8 +10,8 @@ class TestCommandCreator implements OicyCommandCreator {
   triggers(_request: OicyRequest, triggerCreator: OicyTriggerCreator): OicyTriggerSet {
     const triggerSet = new OicyTriggerSet()
     const oicyTrigger = triggerCreator.create([], []);
-    oicyTrigger.callback = 'confrim';
     triggerSet.triggers.push(oicyTrigger);
+    oicyTrigger.callback = "confirm"
     return triggerSet
   }
 
@@ -48,7 +48,7 @@ describe("OicyLambdaRunner", () => {
   it("OiCyRequest has the device info", async () => {
     const event = {
       callback: "create",
-      device: JSON.stringify({ deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" }),
+      device: { deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" },
       mrr: JSON.stringify({ nodes: [], edges: [] }),
     }
 
@@ -71,7 +71,7 @@ describe("OicyLambdaRunner", () => {
     const ret = await OicyLambdaRunner(event, new TestCommandCreator())
     if (ret instanceof OicyTriggerSet) {
       assert.equal(ret.triggers.length, 1)
-      assert.equal(ret.triggers[0].callback, "confrim")
+      assert.equal(ret.triggers[0].callback, "confirm")
     } else {
       assert.fail("ret is not OicyTriggerSet")
     }

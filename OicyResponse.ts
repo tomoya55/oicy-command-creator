@@ -12,6 +12,7 @@ export class OicyTrigger extends OicyResponse {
   linkText?: string
   readonly targetSubMrrKeys: TargetSubMrrKeys
   callback?: string
+  [key: string]: any
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>

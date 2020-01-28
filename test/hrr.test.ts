@@ -10,7 +10,7 @@ describe("Hrr 3663183", () => {
     assert.equal(hrr.id, "3663183")
     assert.equal(hrr.name, "全粒粉と豆乳の栄養たっぷりクランペット")
     assert.equal(hrr.serving, "2人分（小さめ6枚）")
-    assert.equal(hrr.author, "かなこまり")
+    assert.equal(hrr.authorName, "かなこまり")
     assert.equal(
       hrr.tips,
       "簡単すぎて特になし(*^^*)\n小さめクランペット6枚なので、一回り大きくして中サイズ4枚でも良いかもしれません。"

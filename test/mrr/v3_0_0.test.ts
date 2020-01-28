@@ -35,7 +35,7 @@ describe("Mrr V3 2048398", () => {
   json2048398.subGraphs[0].edgeIds.push("e2")
   json2048398.subGraphs[0].edgeIds.push("e3")
 
-  const mrr = Mrr.convert(json2048398)
+  const mrr = Mrr.convert(json2048398, {withNodeNormalizing: true})
 
   it("e1 has settings", () => {
     const e = mrr.edges.find(x => x.actionId == "ah9")
@@ -44,24 +44,71 @@ describe("Mrr V3 2048398", () => {
     }
     assert.equal(e.id, "e1")
 
-    const s = e.settings[0]
-    assert.equal(s.toolId, "microwave")
-    assert.deepEqual(s.data, { type: "manual" })
+    if (e.settings) {
+      const s = e.settings[0]
+      assert.equal(s.toolId, "microwave")
+      assert.deepEqual(s.data, { type: "manual" })
+
+      assert.equal(s.constructor.name, "Setting")
+    } else {
+      assert.fail("No settings")
+    }
   })
 
   it("e2 has settings", () => {
-    const s = mrr.edge("e2").settings[0]
-    assert.equal(s.toolId, "microwaveOven")
-    assert.deepEqual(s.data, {
-      time: [1140],
-      type: "manual",
-      heating: [170],
-      heatingUnit: "c"
+    const edge = mrr.edge("e2")
+    if (edge.settings) {
+      const s = edge.settings[0]
+      assert.equal(s.toolId, "microwaveOven")
+      assert.deepEqual(s.data, {
+        time: [1140],
+        type: "manual",
+        heating: [170],
+        heatingUnit: "c"
+      })
+    } else {
+      assert.fail("No settings")
+    }
+  })
+
+  it("intermediate has kind", () => {
+    const intermediate: any = {"id": "n100"}
+    json2048398.nodes.push(intermediate)
+    const mrr_with_intermediate = Mrr.convert(json2048398, {withNodeNormalizing: true})
+    assert.equal(mrr_with_intermediate.node('2').kind, "ingredient")
+    assert.equal(mrr_with_intermediate.node('n1').kind, "ambiguous")
+    assert.equal(mrr_with_intermediate.node('n100').kind, "intermediate")
+  })
+
+  it("with Coefficient", () => {
+    json2048398.nodes.forEach((v: any) => {
+      if (v.id == "2") {
+        v.quantity.elements[0]["coefficient"] = "c1"
+      }
     })
+    const mrr_with_coef = Mrr.convert(json2048398, {withNodeNormalizing: true})
+    const n = mrr_with_coef.node('2')
+    if (n.quantity) {
+      assert.equal(n.quantity.elements[0].coefficient, "c1")
+    } else {
+      assert.fail("Invalid Mrr node")
+    }
   })
 })
 describe("Mrr V3 4351780", () => {
-  const mrr = Mrr.convert(json4351780)
+  const mrr = Mrr.convert(json4351780, {withNodeNormalizing: true})
+  it("has correct types", () => {
+    assert.equal(mrr.constructor.name, "Mrr")
+    assert.equal(mrr.terminal.constructor.name, "TerminalNode")
+    assert.equal(mrr.terminal.quantity.constructor.name, "Quantity")
+    assert.equal(mrr.terminal.quantity.elements[0].constructor.name, "QuantityElement")
+    if (mrr.ingredientGroups) {
+      assert.equal(mrr.ingredientGroups[0].constructor.name, "IngredientGroup")
+    } else {
+      assert.fail("No ingredientGroups")
+    }
+    assert.equal(mrr.ingredients[0].constructor.name, "IngredientNode")
+  })
   it("having terminal", () => {
     assert.equal(mrr.terminal.id, "1")
     assert.equal(mrr.terminal.name, "《ストウブで作る》肉じゃが☆")
@@ -71,9 +118,13 @@ describe("Mrr V3 4351780", () => {
   })
 
   it("having ingredientGroups", () => {
-    assert.equal(mrr.ingredientGroups.length, 1)
-    assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
-    assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
+    if (mrr.ingredientGroups) {
+      assert.equal(mrr.ingredientGroups.length, 1)
+      assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
+      assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
+    } else {
+      assert.fail("No ingredientGroups")
+    }
   })
 
   it("having servingsFor", () => {

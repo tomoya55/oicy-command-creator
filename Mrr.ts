@@ -1,210 +1,169 @@
-/**
- * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
- */
-const toS = s => {
-  if (!!s) {
-    return s.toString()
-  }
-  return ""
+import 'reflect-metadata';
+import {Type, Expose, plainToClass} from "class-transformer";
+
+export type Coefficient = "c1" | "c2" | undefined;
+export class QuantityElement {
+  unitId?: string
+  subUnitIds?: string[]
+  amount?: number
+  amountExpression?: string
+  coefficient: Coefficient
 }
 
-class QuantityElement {
-  unitId: string
-  subUnitIds: string[]
-  amount: number
-  amountExpression: string
-  coefficient: string
-  rawData: any
+export class Quantity {
+  @Type(() => QuantityElement)
+  elements!: QuantityElement[]
+}
 
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj): QuantityElement {
-    const self = new QuantityElement()
-    Object.keys(obj).forEach(k => (self[k] = obj[k]))
-    self.rawData = obj
-    return self
+export class Setting {
+  toolId!: string
+  data!: any
+}
+
+export class MrrEdge {
+  id!: string
+  actionId!: string
+  toolIds?: string[]
+  @Type(() => Setting)
+  settings?: Setting[]
+  order?: string
+  hrrStepNo?: number
+  hrrStepTextRange?: number[]
+  mrr!: Mrr
+
+  setMrr(mrr: Mrr): void {
+    this.mrr = mrr
   }
 }
 
-class Quantity {
-  elements: QuantityElement[]
-  rawData: any
+export type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient";
+export abstract class MrrNode {
+  id!: string
+  xCookpadName?: string
+  @Expose({ name: "name" })
+  _name?: string
+  state?: string
+  hrrStepNo?: number
+  nutrition?: string
+  mrr!: Mrr
 
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj): Quantity {
-    const self = new Quantity()
-    Object.keys(obj).forEach(k => {
-      if (k == "elements") {
-        self[k] = obj[k].map(v => QuantityElement.convert(v))
-      } else {
-        self[k] = obj[k]
-      }
-      return self
+  get name(): string {
+    return this.xCookpadName || this._name || ""
+  }
+  abstract get kind(): Kind;
+
+  setMrr(mrr: Mrr): void {
+    this.mrr = mrr
+  }
+}
+export class IngredientNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity!: Quantity
+  foodCompositionId?: string
+  foodCategoryId?: string
+  hrrIngredientPosition?: number
+  ingredientPosition?: number
+  ingredientGroupMark?: string
+  alternativeFoodCompositionIds?: string[]
+  alternativeFoodCategoryIds?: string[]
+  get kind(): Kind {
+    return "ingredient"
+  }
+}
+export class TerminalNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity!: Quantity
+  get kind(): Kind {
+    return "terminal"
+  }
+}
+export class DisuseNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+  get kind(): Kind {
+    return "disuse"
+  }
+}
+export class IntermediateNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+  get kind(): Kind {
+    return "intermediate"
+  }
+}
+export class AmbiguousNode extends MrrNode {
+  @Type(() => Quantity)
+  quantity?: Quantity
+  get kind(): Kind {
+    return "ambiguous"
+  }
+}
+export type NodeType = IngredientNode | TerminalNode | DisuseNode | IntermediateNode | AmbiguousNode
+export class IngredientGroup {
+  ingredientGroupMark!: String
+  nodeIds!: String[]
+}
+export class SubGraph {
+  kind!: string
+  nodeIds!: string[]
+  edgeIds!: string[]
+}
+export class Mrr {
+  xCookpadRecipeUrl?: string
+  @Expose({ name: "recipeUrl" })
+  _recipeUrl?: string
+
+  xCookpadRecipeId?: string
+  @Expose({ name: "recipeId" })
+  _recipeId?: string
+
+  formatVersion!: string
+  lcid!: string
+  authorName!: string
+
+  @Type(() => MrrNode, {
+      discriminator: {
+        property: "kind",
+        subTypes: [
+          { value: IngredientNode, name: "ingredient" },
+          { value: TerminalNode, name: "terminal" },
+          { value: DisuseNode, name: "disuse" },
+          { value: AmbiguousNode, name: "ambiguous" },
+          { value: IntermediateNode, name: "intermediate" }
+        ]
+      },
+      keepDiscriminatorProperty: true
     })
-    self.rawData = obj
-    return self
-  }
-}
+  nodes!: NodeType[]
+  @Type(() => MrrEdge)
+  edges!: MrrEdge[]
+  @Type(() => IngredientGroup)
+  ingredientGroups?: IngredientGroup[]
+  @Type(() => SubGraph)
+  subGraphs!: SubGraph[]
 
-class Setting {
-  toolId: string
-  data: any
-}
+  @Type(() => Date)
+  createdAt!: Date
+  @Type(() => Date)
+  hrrUpdatedAt!: Date
 
-class MrrEdge {
-  id: string
-  kind: string
-  actionId: string
-  toolIds: string[]
-  settings: Setting[]
-  order: string
-  hrrStepNo: number
-  hrrStepTextRange: number[]
-  mrr: Mrr
-  rawData: any
-
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj, mrr: Mrr): MrrEdge {
-    const self = new MrrEdge()
-    Object.keys(obj).forEach(k => {
-      if (k == "settings") {
-        const set = obj[k]
-        if (set.length && set.length > 0) {
-          self.settings = set.map(v => {
-            const setting = new Setting()
-            setting.toolId = v.toolId
-            setting.data = v.data
-            return setting
-          })
-        }
-      } else {
-        self[k] = obj[k]
-      }
-    })
-    self.mrr = mrr
-    self.rawData = obj
-    return self
-  }
-}
-class MrrNode {
-  id: string
-  kind: string
-  xCookpadName: string
-  quantity: Quantity
-  state: string
-  hrrStepNo: number
-  nutrition: string
-  mrr: Mrr
-  rawData: any
-
-  get name() {
-    return this.xCookpadName
-  }
-
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj, mrr: Mrr): MrrNode {
-    const self = new MrrNode()
-    Object.keys(obj).forEach(k => {
-      if (k == "quantity") {
-        self[k] = Quantity.convert(obj[k])
-      } else if (k == "name" || k == "xCookpadName") {
-        self.xCookpadName = obj[k]
-      } else {
-        self[k] = obj[k]
-      }
-    })
-    self.kind = self.kind || "intermediate"
-    self.mrr = mrr
-    self.rawData = obj
-    return self
-  }
-}
-class IngredientNode extends MrrNode {
-  foodCompositionId: string
-  foodCategoryId: string
-  hrrIngredientPosition: number
-  ingredientPosition: number
-  ingredientGroupMark: string
-  alternativeFoodCompositionIds: string[]
-  alternativeFoodCategoryIds: string[]
-  mrr: Mrr
-  rawData: any
-
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj, mrr: Mrr): IngredientNode {
-    const self = new IngredientNode()
-    Object.keys(obj).forEach(k => {
-      if (k == "quantity") {
-        self[k] = Quantity.convert(obj[k])
-      } else if (k == "name" || k == "xCookpadName") {
-        self.xCookpadName = obj[k]
-      } else {
-        self[k] = obj[k]
-      }
-    })
-    self.kind = "ingredient"
-    self.mrr = mrr
-    self.rawData = obj
-    return self
-  }
-}
-class IngredientGroup {
-  ingredientGroupMark: String
-  nodeIds: String[]
-  mrr: Mrr
-  rawData: any
-
-  /**
-   * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
-   */
-  static convert(obj, mrr: Mrr): IngredientGroup {
-    const self = new IngredientGroup()
-    self.ingredientGroupMark = toS(obj.ingredientGroupMark)
-    self.nodeIds = obj.nodeIds.map(i => toS(i))
-    self.mrr = mrr
-    self.rawData = obj
-    return self
-  }
-}
-class Mrr {
-  xCookpadRecipeUrl: string
-  xCookpadRecipeId: string
-  formatVersion: string
-  lcid: string
-  authorName: string
-  nodes: MrrNode[]
-  edges: MrrEdge[]
-  ingredientGroups: IngredientGroup[]
-  subGraphs: any
-  createdAt: Date
-  hrrUpdatedAt: Date
-  rawData: any
-
-  _ingredients: IngredientNode[]
-  _terminal: MrrNode
-  _edgeById: any
+  _ingredients!: IngredientNode[]
+  _terminal!: TerminalNode
+  _edgeById!: any
+  _nodeById!: any
 
   get recipeUrl() {
-    return this.xCookpadRecipeUrl
+    return this.xCookpadRecipeUrl || this._recipeUrl
   }
   get recipeId() {
-    return this.xCookpadRecipeId
+    return this.xCookpadRecipeId || this._recipeId
   }
 
-  get terminal() {
+  get terminal(): TerminalNode {
     if (this._terminal) {
       return this._terminal
     }
-    this._terminal = this.nodes.filter(n => n.kind == "terminal")[0]
+    this._terminal = this.nodes.filter(n => n.kind == "terminal")[0] as TerminalNode
     return this._terminal
   }
   get servingsFor() {
@@ -219,7 +178,22 @@ class Mrr {
     return this._ingredients
   }
 
-  edge(id) {
+  node(id: string): NodeType {
+    if (this._nodeById && this._nodeById[id]) {
+      return this._nodeById[id]
+    }
+    if (!this._nodeById) {
+      this._nodeById = {}
+    }
+    this.nodes.forEach(v => this._nodeById[v.id] = v)
+    if (this._nodeById[id]) {
+      return this._nodeById[id]
+    } else {
+      throw "Not found id=" + id
+    }
+  }
+
+  edge(id: string): MrrEdge {
     if (this._edgeById && this._edgeById[id]) {
       return this._edgeById[id]
     }
@@ -242,25 +216,20 @@ class Mrr {
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
+   * withNodeNormalizing: when this is true, convert method will change input obj.
+   *   e.g., filling kind property of node (intermediate).
    */
-  static convert(obj): Mrr {
-    const self = new Mrr()
-    self.xCookpadRecipeUrl = toS(obj.recipeUrl || obj.xCookpadRecipeUrl)
-    self.xCookpadRecipeId = toS(obj.recipeId || obj.xCookpadRecipeId)
-    self.formatVersion = toS(obj.formatVersion)
-    self.lcid = toS(obj.lcid)
-    self.authorName = toS(obj.authorName)
-    self.nodes = obj.nodes.map(n => (n.kind == 'ingredient') ? IngredientNode.convert(n, self) : MrrNode.convert(n, self))
-    self.edges = obj.edges.map(n => MrrEdge.convert(n, self))
-    if (obj.ingredientGroups) {
-      self.ingredientGroups = obj.ingredientGroups.map(g => IngredientGroup.convert(g, self))
+  static convert(obj: any, {withNodeNormalizing}: {withNodeNormalizing: boolean}): Mrr {
+    if (withNodeNormalizing) {
+      obj.nodes.forEach((v: any) => {
+        if (!v.kind) {
+          v.kind = "intermediate"
+        }
+      })
     }
-    self.subGraphs = obj.subGraphs
-    self.createdAt = new Date(obj.createdAt)
-    self.hrrUpdatedAt = new Date(obj.hrrUpdatedAt)
-    self.rawData = obj
-    return self
+    const mrr = plainToClass(Mrr, obj)
+    mrr.nodes.forEach(v => v.setMrr(mrr))
+    mrr.edges.forEach(v => v.setMrr(mrr))
+    return mrr
   }
 }
-
-export { Mrr, MrrEdge, MrrNode, Quantity }

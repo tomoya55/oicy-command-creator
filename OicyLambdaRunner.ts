@@ -1,77 +1,50 @@
 import { Hrr } from "./Hrr"
 import { Mrr } from "./Mrr"
 import { OicyRequest, UserDevice } from "./OicyRequest"
-import { OicyCommand, OicyResponse, OicyTriggerCreator } from "./OicyResponse"
+import { OicyCommand, OicyResponse, OicyTriggerCreator, OicyTriggerSet } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
-const toObj = obj => {
-  if (typeof obj != "object") {
-    return obj
-  }
-  if (Array.isArray(obj)) {
-    return obj.map(v => toObj(v))
-  }
-
-  const ret = {}
-  Object.keys(obj).forEach(k => {
-    ret[k] = toObj(obj[k])
-  })
-  return ret
-}
-
-/**
- * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
- */
-const stringToObject = o => {
-  if (typeof o == "string") {
-    return JSON.parse(o)
-  } else {
-    return o
-  }
-}
-
-/**
- * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
- */
-const OicyLambdaRunner = async (event, commandCreator: OicyCommandCreator) => {
-  const mrr = Mrr.convert(stringToObject(event.mrr))
-  let hrr: Hrr | null = null
-  if (event.hrr) {
-    hrr = Hrr.convert(stringToObject(event.hrr))
-  }
+export const OicyLambdaRunner =
+  async (event: any, commandCreator: OicyCommandCreator): Promise<OicyTriggerSet | OicyResponse | OicyCommand> => {
+  const mrr = Mrr.convert(JSON.parse(event.mrr), {withNodeNormalizing: true})
+  const hrr = event.hrr ? Hrr.convert(JSON.parse(event.hrr)) : undefined
   const params = event.params
-  const targetSubMrrKeys = stringToObject(event.targetSubMrrKeys || {})
-  const changedServingsForRate = Number(event.changedServingsForRate) || 1
-  let device: UserDevice | null = null
+  const targetSubMrrKeys = event.targetSubMrrKeys ? JSON.parse(event.targetSubMrrKeys) : {}
+  const changedServingsForRate = event.changedServingsForRate ? Number(event.changedServingsForRate) : 1
+  let device: UserDevice | undefined;
   if (event.device) {
-    device = UserDevice.convert(stringToObject(event.device))
+    const deviceObj: any = event.device
+    device = new UserDevice(
+      deviceObj.deviceId as string,
+      deviceObj.deviceTypeNumber as string,
+      deviceObj.deviceModelName as string,
+      deviceObj.nickname as string
+    )
   }
   const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
   const callback = event.callback
 
   if (callback == "triggers") {
     const triggerCreator = new OicyTriggerCreator()
-    const triggers = commandCreator.triggers(request, triggerCreator)
+    const triggerSet = commandCreator.triggers(request, triggerCreator)
 
-    if (triggers.length > 0) {
-      return toObj(triggers)
-    } else {
-      return {}
-    }
+    return triggerSet
   } else if (callback == "create") {
     const command = new OicyCommand()
     commandCreator.create(request, command)
 
-    return toObj(command)
+    return command
+  } else if (!callback) {
+    throw "Undefined callback"
   }
 
   const response = new OicyResponse()
-  commandCreator[callback].call(commandCreator, request, response)
+  const method: (arg1: OicyRequest, arg2: OicyResponse) => void =
+    Reflect.get(commandCreator, callback)
+  method.call(commandCreator, request, response)
 
-  return toObj(response)
+  return response
 }
-
-export { OicyLambdaRunner }

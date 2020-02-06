@@ -12,6 +12,7 @@ export class OicyTrigger extends OicyResponse {
   linkText?: string
   readonly targetSubMrrKeys: TargetSubMrrKeys
   callback?: string
+  [key: string]: any
 
   /**
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
@@ -35,7 +36,7 @@ export class OicyTrigger extends OicyResponse {
 export class OicyTriggerSet {
   triggers: OicyTrigger[]
   constructor() {
-    this.triggers = new Array<OicyTrigger>();
+    this.triggers = new Array<OicyTrigger>()
   }
 }
 export enum HttpMethod {

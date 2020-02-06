@@ -9,9 +9,10 @@ import { OicyTriggerSet, OicyCommand, OicyTriggerCreator } from "../OicyResponse
 class TestCommandCreator implements OicyCommandCreator {
   triggers(_request: OicyRequest, triggerCreator: OicyTriggerCreator): OicyTriggerSet {
     const triggerSet = new OicyTriggerSet()
-    const oicyTrigger = triggerCreator.create([], []);
-    triggerSet.triggers.push(oicyTrigger);
+    const oicyTrigger = triggerCreator.create([], [])
+    triggerSet.triggers.push(oicyTrigger)
     oicyTrigger.callback = "confirm"
+    oicyTrigger.mydata = "mydata"
     return triggerSet
   }
 
@@ -72,6 +73,7 @@ describe("OicyLambdaRunner", () => {
     if (ret instanceof OicyTriggerSet) {
       assert.equal(ret.triggers.length, 1)
       assert.equal(ret.triggers[0].callback, "confirm")
+      assert.equal(ret.triggers[0].mydata, "mydata")
     } else {
       assert.fail("ret is not OicyTriggerSet")
     }

@@ -36,7 +36,7 @@ export class OicyTrigger extends OicyResponse {
 export class OicyTriggerSet {
   triggers: OicyTrigger[]
   constructor() {
-    this.triggers = new Array<OicyTrigger>();
+    this.triggers = new Array<OicyTrigger>()
   }
 }
 export enum HttpMethod {

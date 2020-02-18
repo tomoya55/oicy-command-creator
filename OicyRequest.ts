@@ -44,9 +44,9 @@ export class OicyRequest {
    */
   constructor(
     params: any,
-    mrr?: Mrr,
-    targetSubMrrKeys?: TargetSubMrrKeys,
-    changedServingsForRate?: number,
+    mrr: Mrr,
+    targetSubMrrKeys: TargetSubMrrKeys,
+    changedServingsForRate: number,
     hrr?: Hrr,
     device?: UserDevice
   ) {
@@ -63,19 +63,12 @@ export class OicyRequest {
    */
   static create(
     params: any,
-    mrr?: Mrr,
-    targetSubMrrKeysObj?: any,
-    changedServingsForRate?: number,
+    mrr: Mrr,
+    targetSubMrrKeys: TargetSubMrrKeys,
+    changedServingsForRate: number,
     hrr?: Hrr,
     device?: UserDevice
   ): OicyRequest {
-    let nodeIds = []
-    let edgeIds = []
-    if (targetSubMrrKeysObj) {
-      nodeIds = targetSubMrrKeysObj.nodeIds
-      edgeIds = targetSubMrrKeysObj.edgeIds
-    }
-    const targetSubMrrKeys = new TargetSubMrrKeys(nodeIds, edgeIds)
     return new this(params, mrr, targetSubMrrKeys, changedServingsForRate, hrr, device)
   }
 }

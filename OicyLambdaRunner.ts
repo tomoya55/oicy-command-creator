@@ -1,35 +1,40 @@
 import { Hrr } from "./Hrr"
 import { Mrr } from "./Mrr"
-import { OicyRequest, UserDevice } from "./OicyRequest"
+import { OicyRequest, UserDevice, TargetSubMrrKeys } from "./OicyRequest"
 import { OicyCommand, OicyResponse, OicyTriggerCreator, OicyTriggerSet } from "./OicyResponse"
 import { OicyCommandCreator } from "./OicyCommandCreator"
+
+export type OiCyEventParams = { [key:string]: any }
+
+export type OicyEvent = {
+  callback: string
+  params?: OiCyEventParams
+  mrr?: string
+  hrr?: string
+  targetSubMrrKeys?: string
+  changedServingsForRate?: string | number
+  device?: UserDevice
+}
 
 /**
  * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
  */
 export const OicyLambdaRunner = async (
-  event: any,
+  event: OicyEvent,
   commandCreator: OicyCommandCreator
 ): Promise<OicyTriggerSet | OicyResponse | OicyCommand> => {
-  let mrr: Mrr | undefined
-  if (event.mrr) {
-    mrr = Mrr.convert(JSON.parse(event.mrr), { withNodeNormalizing: true })
-  }
-  const hrr = event.hrr ? Hrr.convert(JSON.parse(event.hrr)) : undefined
   const params = event.params
-  const targetSubMrrKeys = event.targetSubMrrKeys ? JSON.parse(event.targetSubMrrKeys) : {}
+
+  const mrr = event.mrr ? Mrr.convert(JSON.parse(event.mrr), { withNodeNormalizing: true }) : new Mrr()
+  const targetSubMrrKeys = event.targetSubMrrKeys
+    ? (JSON.parse(event.targetSubMrrKeys) as TargetSubMrrKeys)
+    : new TargetSubMrrKeys([], [])
+
+  const hrr = event.hrr ? Hrr.convert(JSON.parse(event.hrr)) : undefined
+
   const changedServingsForRate = event.changedServingsForRate ? Number(event.changedServingsForRate) : 1
-  let device: UserDevice | undefined
-  if (event.device) {
-    const deviceObj: any = event.device
-    device = new UserDevice(
-      deviceObj.deviceId as string,
-      deviceObj.deviceTypeNumber as string,
-      deviceObj.deviceModelName as string,
-      deviceObj.nickname as string
-    )
-  }
-  const request = OicyRequest.create(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
+
+  const request = OicyRequest.create(params, mrr, targetSubMrrKeys, changedServingsForRate, hrr, event.device)
   const callback = event.callback
 
   if (callback == "triggers") {

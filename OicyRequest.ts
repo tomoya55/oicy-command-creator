@@ -7,16 +7,11 @@ export class UserDevice {
   readonly deviceModelName: string
   readonly nickname: string
 
-  constructor(
-    deviceId: string,
-    deviceTypeNumber: string,
-    deviceModelName: string,
-    nickname: string
-    ) {
-      this.deviceId = deviceId
-      this.deviceTypeNumber = deviceTypeNumber
-      this.deviceModelName = deviceModelName
-      this.nickname = nickname
+  constructor(deviceId: string, deviceTypeNumber: string, deviceModelName: string, nickname: string) {
+    this.deviceId = deviceId
+    this.deviceTypeNumber = deviceTypeNumber
+    this.deviceModelName = deviceModelName
+    this.nickname = nickname
   }
 }
 

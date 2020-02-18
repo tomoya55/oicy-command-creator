@@ -11,7 +11,7 @@ export class OicyTrigger extends OicyResponse {
   position?: string
   linkText?: string
   readonly targetSubMrrKeys: TargetSubMrrKeys
-  callback?: string
+  callback?: string;
   [key: string]: any
 
   /**

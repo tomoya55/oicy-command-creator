@@ -1,5 +1,5 @@
-import 'reflect-metadata';
-import {Type, Expose, plainToClass} from "class-transformer";
+import "reflect-metadata"
+import { Type, Expose, plainToClass } from "class-transformer"
 
 export class HrrIngredient {
   ingredientPosition!: number

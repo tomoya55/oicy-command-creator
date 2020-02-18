@@ -11,7 +11,10 @@ export const OicyLambdaRunner = async (
   event: any,
   commandCreator: OicyCommandCreator
 ): Promise<OicyTriggerSet | OicyResponse | OicyCommand> => {
-  const mrr = Mrr.convert(JSON.parse(event.mrr), { withNodeNormalizing: true })
+  let mrr: Mrr | undefined
+  if (event.mrr) {
+    mrr = Mrr.convert(JSON.parse(event.mrr), { withNodeNormalizing: true })
+  }
   const hrr = event.hrr ? Hrr.convert(JSON.parse(event.hrr)) : undefined
   const params = event.params
   const targetSubMrrKeys = event.targetSubMrrKeys ? JSON.parse(event.targetSubMrrKeys) : {}

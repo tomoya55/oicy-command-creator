@@ -65,7 +65,7 @@ describe("OicyLambdaRunner", () => {
   it("OiCyRequest has triggers", async () => {
     const event = {
       callback: "triggers",
-      device: JSON.stringify({ deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" }),
+      device: { deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" },
       mrr: JSON.stringify({ nodes: [], edges: [] }),
     }
 
@@ -76,6 +76,22 @@ describe("OicyLambdaRunner", () => {
       assert.equal(ret.triggers[0].mydata, "mydata")
     } else {
       assert.fail("ret is not OicyTriggerSet")
+    }
+  })
+
+  it("OiCyRequest doesn't have MRR", async () => {
+    const event = {
+      callback: "create",
+      device: { deviceTypeNumber: "OCY-001", deviceModelName: "OiCyDevice" },
+      mrr: "",
+    }
+
+    const ret = await OicyLambdaRunner(event, new TestCommandCreator())
+    if (ret instanceof OicyCommand) {
+      assert.deepEqual(ret.view, {})
+      assert.equal(ret.data, "t=OCY-001&m=OiCyDevice")
+    } else {
+      assert.fail("ret is not OicyCommand")
     }
   })
 })

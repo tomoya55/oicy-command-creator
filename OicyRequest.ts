@@ -29,17 +29,13 @@ export class TargetSubMrrKeys {
 }
 
 export class OicyRequest {
-  /**
-   * Local code (e.g. ja-JP)
-   */
-  readonly lcid!: string
   readonly params: any
-  readonly mrr: Mrr
-  readonly targetSubMrrKeys: TargetSubMrrKeys
+  readonly mrr?: Mrr
+  readonly targetSubMrrKeys?: TargetSubMrrKeys
   /**
    * The ServingsForRate is changed by the user. Default value is 1
    */
-  readonly changedServingsForRate: number
+  readonly changedServingsForRate?: number
   readonly hrr?: Hrr
   readonly device?: UserDevice
 
@@ -47,16 +43,16 @@ export class OicyRequest {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   constructor(
-    mrr: Mrr,
     params: any,
-    targetSubMrrKeys: TargetSubMrrKeys,
-    changedServingsForRate: number,
+    mrr?: Mrr,
+    targetSubMrrKeys?: TargetSubMrrKeys,
+    changedServingsForRate?: number,
     hrr?: Hrr,
     device?: UserDevice
   ) {
-    this.targetSubMrrKeys = targetSubMrrKeys
-    this.mrr = mrr
     this.params = params
+    this.mrr = mrr
+    this.targetSubMrrKeys = targetSubMrrKeys
     this.changedServingsForRate = changedServingsForRate
     this.hrr = hrr
     this.device = device
@@ -66,10 +62,10 @@ export class OicyRequest {
    * <b>!!PACKAGE PRIVATE!! DO NOT CALL THIS.</b>
    */
   static create(
-    mrr: Mrr,
     params: any,
-    targetSubMrrKeysObj: any,
-    changedServingsForRate: number,
+    mrr?: Mrr,
+    targetSubMrrKeysObj?: any,
+    changedServingsForRate?: number,
     hrr?: Hrr,
     device?: UserDevice
   ): OicyRequest {
@@ -80,6 +76,6 @@ export class OicyRequest {
       edgeIds = targetSubMrrKeysObj.edgeIds
     }
     const targetSubMrrKeys = new TargetSubMrrKeys(nodeIds, edgeIds)
-    return new this(mrr, params, targetSubMrrKeys, changedServingsForRate, hrr, device)
+    return new this(params, mrr, targetSubMrrKeys, changedServingsForRate, hrr, device)
   }
 }

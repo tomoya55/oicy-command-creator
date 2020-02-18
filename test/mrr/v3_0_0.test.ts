@@ -6,27 +6,39 @@ import json4351780 from "../../test_data/mrrs/v3.0.0/4351780"
 import json2048398 from "../../test_data/mrrs/v3.0.0/2048398"
 
 describe("Mrr V3 2048398", () => {
-  const terminal = json2048398.nodes.filter(n => n.kind == 'terminal')[0]
+  const terminal = json2048398.nodes.filter(n => n.kind == "terminal")[0]
   const t_id = terminal.id
-  let n: any = {"id": t_id, "kind": "ambiguous"}
+  let n: any = { id: t_id, kind: "ambiguous" }
   json2048398.nodes.push(n)
-  n = {"id": "n1", "kind": "ambiguous"}
+  n = { id: "n1", kind: "ambiguous" }
   json2048398.nodes.push(n)
-  n = {"id": "n2", "kind": "ambiguous"}
+  n = { id: "n2", kind: "ambiguous" }
   json2048398.nodes.push(n)
   terminal.id = "n0"
 
-  let edge: any = {"id": "e1", "to": "n1", "from": t_id, "toolIds": ["microwave"], "actionId": "ah9",
-    "settings": [{"data": {"type": "manual"}, "toolId": "microwave"}],
-    "hrrStepNo": 1, "hrrStepTextRange": [0, 13]}
+  let edge: any = {
+    id: "e1",
+    to: "n1",
+    from: t_id,
+    toolIds: ["microwave"],
+    actionId: "ah9",
+    settings: [{ data: { type: "manual" }, toolId: "microwave" }],
+    hrrStepNo: 1,
+    hrrStepTextRange: [0, 13],
+  }
   json2048398.edges.push(edge)
-  edge = {"id": "e2", "to": "n2", "from": "n1", "toolIds": ["microwaveOven"], "actionId": "ah6-6",
-    "settings":
-      [{"data": {"time": [1140], "type": "manual", "heating": [170], "heatingUnit": "c"},
-        "toolId": "microwaveOven"}],
-    "hrrStepNo": 3, "hrrStepTextRange": [15, 28]}
+  edge = {
+    id: "e2",
+    to: "n2",
+    from: "n1",
+    toolIds: ["microwaveOven"],
+    actionId: "ah6-6",
+    settings: [{ data: { time: [1140], type: "manual", heating: [170], heatingUnit: "c" }, toolId: "microwaveOven" }],
+    hrrStepNo: 3,
+    hrrStepTextRange: [15, 28],
+  }
   json2048398.edges.push(edge)
-  edge = {"id": "e3", "to": "n0", "from": "n2", "actionId": "aa1"}
+  edge = { id: "e3", to: "n0", from: "n2", actionId: "aa1" }
   json2048398.edges.push(edge)
   json2048398.subGraphs[0].nodeIds.push("n0")
   json2048398.subGraphs[0].nodeIds.push("n1")
@@ -35,7 +47,7 @@ describe("Mrr V3 2048398", () => {
   json2048398.subGraphs[0].edgeIds.push("e2")
   json2048398.subGraphs[0].edgeIds.push("e3")
 
-  const mrr = Mrr.convert(json2048398, {withNodeNormalizing: true})
+  const mrr = Mrr.convert(json2048398, { withNodeNormalizing: true })
 
   it("e1 has settings", () => {
     const e = mrr.edges.find(x => x.actionId == "ah9")
@@ -64,7 +76,7 @@ describe("Mrr V3 2048398", () => {
         time: [1140],
         type: "manual",
         heating: [170],
-        heatingUnit: "c"
+        heatingUnit: "c",
       })
     } else {
       assert.fail("No settings")
@@ -72,12 +84,12 @@ describe("Mrr V3 2048398", () => {
   })
 
   it("intermediate has kind", () => {
-    const intermediate: any = {"id": "n100"}
+    const intermediate: any = { id: "n100" }
     json2048398.nodes.push(intermediate)
-    const mrr_with_intermediate = Mrr.convert(json2048398, {withNodeNormalizing: true})
-    assert.equal(mrr_with_intermediate.node('2').kind, "ingredient")
-    assert.equal(mrr_with_intermediate.node('n1').kind, "ambiguous")
-    assert.equal(mrr_with_intermediate.node('n100').kind, "intermediate")
+    const mrr_with_intermediate = Mrr.convert(json2048398, { withNodeNormalizing: true })
+    assert.equal(mrr_with_intermediate.node("2").kind, "ingredient")
+    assert.equal(mrr_with_intermediate.node("n1").kind, "ambiguous")
+    assert.equal(mrr_with_intermediate.node("n100").kind, "intermediate")
   })
 
   it("with Coefficient", () => {
@@ -86,8 +98,8 @@ describe("Mrr V3 2048398", () => {
         v.quantity.elements[0]["coefficient"] = "c1"
       }
     })
-    const mrr_with_coef = Mrr.convert(json2048398, {withNodeNormalizing: true})
-    const n = mrr_with_coef.node('2')
+    const mrr_with_coef = Mrr.convert(json2048398, { withNodeNormalizing: true })
+    const n = mrr_with_coef.node("2")
     if (n.quantity) {
       assert.equal(n.quantity.elements[0].coefficient, "c1")
     } else {
@@ -96,7 +108,7 @@ describe("Mrr V3 2048398", () => {
   })
 })
 describe("Mrr V3 4351780", () => {
-  const mrr = Mrr.convert(json4351780, {withNodeNormalizing: true})
+  const mrr = Mrr.convert(json4351780, { withNodeNormalizing: true })
   it("has correct types", () => {
     assert.equal(mrr.constructor.name, "Mrr")
     assert.equal(mrr.terminal.constructor.name, "TerminalNode")
@@ -121,7 +133,7 @@ describe("Mrr V3 4351780", () => {
     if (mrr.ingredientGroups) {
       assert.equal(mrr.ingredientGroups.length, 1)
       assert.equal(mrr.ingredientGroups[0].ingredientGroupMark, "☆")
-      assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8","9","10","11"])
+      assert.deepEqual(mrr.ingredientGroups[0].nodeIds, ["8", "9", "10", "11"])
     } else {
       assert.fail("No ingredientGroups")
     }
@@ -152,6 +164,6 @@ describe("Mrr V3 4351780", () => {
   })
 
   it("having hrrUpdatedAt", () => {
-    assert.deepEqual(mrr.hrrUpdatedAt.getFullYear(), Number(json4351780['hrrUpdatedAt'].split('-')[0]))
+    assert.deepEqual(mrr.hrrUpdatedAt.getFullYear(), Number(json4351780["hrrUpdatedAt"].split("-")[0]))
   })
 })

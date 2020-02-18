@@ -1,7 +1,7 @@
-import 'reflect-metadata';
-import {Type, Expose, plainToClass} from "class-transformer";
+import "reflect-metadata"
+import { Type, Expose, plainToClass } from "class-transformer"
 
-export type Coefficient = "c1" | "c2" | undefined;
+export type Coefficient = "c1" | "c2" | undefined
 export class QuantityElement {
   unitId?: string
   subUnitIds?: string[]
@@ -36,7 +36,7 @@ export class MrrEdge {
   }
 }
 
-export type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient";
+export type Kind = "terminal" | "disuse" | "ambiguous" | "intermediate" | "ingredient"
 export abstract class MrrNode {
   id!: string
   xCookpadName?: string
@@ -50,7 +50,7 @@ export abstract class MrrNode {
   get name(): string {
     return this.xCookpadName || this._name || ""
   }
-  abstract get kind(): Kind;
+  abstract get kind(): Kind
 
   setMrr(mrr: Mrr): void {
     this.mrr = mrr
@@ -122,18 +122,18 @@ export class Mrr {
   authorName!: string
 
   @Type(() => MrrNode, {
-      discriminator: {
-        property: "kind",
-        subTypes: [
-          { value: IngredientNode, name: "ingredient" },
-          { value: TerminalNode, name: "terminal" },
-          { value: DisuseNode, name: "disuse" },
-          { value: AmbiguousNode, name: "ambiguous" },
-          { value: IntermediateNode, name: "intermediate" }
-        ]
-      },
-      keepDiscriminatorProperty: true
-    })
+    discriminator: {
+      property: "kind",
+      subTypes: [
+        { value: IngredientNode, name: "ingredient" },
+        { value: TerminalNode, name: "terminal" },
+        { value: DisuseNode, name: "disuse" },
+        { value: AmbiguousNode, name: "ambiguous" },
+        { value: IntermediateNode, name: "intermediate" },
+      ],
+    },
+    keepDiscriminatorProperty: true,
+  })
   nodes!: NodeType[]
   @Type(() => MrrEdge)
   edges!: MrrEdge[]
@@ -174,7 +174,7 @@ export class Mrr {
     if (this._ingredients) {
       return this._ingredients
     }
-    this._ingredients = (this.nodes.filter(n => n.kind == "ingredient") as IngredientNode[])
+    this._ingredients = this.nodes.filter(n => n.kind == "ingredient") as IngredientNode[]
     return this._ingredients
   }
 
@@ -185,7 +185,7 @@ export class Mrr {
     if (!this._nodeById) {
       this._nodeById = {}
     }
-    this.nodes.forEach(v => this._nodeById[v.id] = v)
+    this.nodes.forEach(v => (this._nodeById[v.id] = v))
     if (this._nodeById[id]) {
       return this._nodeById[id]
     } else {
@@ -219,7 +219,7 @@ export class Mrr {
    * withNodeNormalizing: when this is true, convert method will change input obj.
    *   e.g., filling kind property of node (intermediate).
    */
-  static convert(obj: any, {withNodeNormalizing}: {withNodeNormalizing: boolean}): Mrr {
+  static convert(obj: any, { withNodeNormalizing }: { withNodeNormalizing: boolean }): Mrr {
     if (withNodeNormalizing) {
       obj.nodes.forEach((v: any) => {
         if (!v.kind) {
